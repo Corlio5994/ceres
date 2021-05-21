@@ -2,6 +2,8 @@ public enum ServerPackets {
     // Server --> Client
     ConnectedTCP,
     ConnectedUDP,
+    VersionAccepted,
+    VersionDenied,
     LoginAccepted,
     LoginDenied,
     LogoutSuccessful,
@@ -15,6 +17,7 @@ public enum ServerPackets {
 
 public enum ClientPackets {
     // Client --> Server
+    VersionCheck,
     Login,
     Logout,
     PlayerDataRequest,

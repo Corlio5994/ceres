@@ -14,6 +14,13 @@ public static class PacketSender {
     }
 
     #region Packets
+    public static void VersionCheck() {
+        using (Packet packet = new Packet ((int) ClientPackets.VersionCheck)) {
+            packet.Write(Constants.version);
+            SendTCPData (packet);
+        }
+    }
+
     public static void Login (string username, string password) {
         using (Packet packet = new Packet ((int) ClientPackets.Login)) {
             packet.Write (username);

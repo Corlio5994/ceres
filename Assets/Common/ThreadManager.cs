@@ -18,7 +18,7 @@ public class ThreadManager : MonoBehaviour {
         }
     }
 
-    public void Update () {
+    public void FixedUpdate () {
         if (actionToExecuteOnMainThread) {
             executeCopiedOnMainThread.Clear ();
             lock (executeOnMainThread) {

@@ -74,3 +74,6 @@ crashlytics-build.properties
 
 # Build folder
 Build/
+
+# Firebase Secret
+**/google-services*.json

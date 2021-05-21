@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
@@ -20,7 +21,6 @@ public class GameManager : MonoBehaviour {
             Destroy (gameObject);
         instance = this;
 
-        DontDestroyOnLoad (gameObject);
         playerPrefab = _playerPrefab;
         otherPlayerPrefab = _otherPlayerPrefab;
         groundMask = _groundMask;
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start () {
-        if (singlePlayer) {
+        if (singlePlayer && SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null) {
             SpawnPlayer (Vector3.up, Quaternion.identity);
         } else if (Client.connected) {
             PacketSender.PlayerDataRequest ();
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
             otherPlayers.Add (clientID, (OtherPlayer) newPlayer);
         } else {
             player = (Player) newPlayer;
-            CameraController.SetTarget(player.transform);
+            CameraController.SetTarget (player.transform);
         }
 
         return newPlayer;
@@ -70,5 +70,19 @@ public class GameManager : MonoBehaviour {
     public static void Logout () {
         otherPlayers.Clear ();
         player = null;
+    }
+
+    public void OnApplicationQuit () {
+        if (GameServer.Server.active) {
+            GameServer.Server.Stop ();
+        }
+    }
+
+    public static void Quit () {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
     }
 }

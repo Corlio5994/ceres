@@ -16,36 +16,37 @@ public class CameraController : MonoBehaviour {
     private static float maximumZoom;
     private static float zoomSpeed;
     private static Transform target;
-    private Vector3 offset;
-    private Vector3 velocity;
+    private static Vector3 offset;
+    private static Vector3 velocity;
 
-    void Awake() {
+    void Awake () {
         smoothTime = _smoothTime;
         moveSpeed = _moveSpeed;
         minimumZoom = _minimumZoom;
+        maximumZoom = _maximumZoom;
         zoomSpeed = _zoomSpeed;
         zoom = minimumZoom;
-    }
-
-    void Start () {
         offset = transform.position;
     }
 
     void Update () {
         if (target != null)
-            transform.position = Vector3.SmoothDamp(transform.position, target.transform.position + offset, ref velocity, smoothTime, 100f);
+            transform.position = Vector3.SmoothDamp (transform.position, target.transform.position + offset, ref velocity, smoothTime, 100f);
         else {
-            Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            Vector3 input = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, Input.GetAxisRaw ("Vertical"));
             transform.position += input * moveSpeed * Time.deltaTime;
         }
 
-        // Vector2 scrollDelta = Input.mouseScrollDelta;
-        // zoom -= scrollDelta.y * zoomSpeed;
-        // zoom = Mathf.Clamp(zoom, minimumZoom, maximumZoom);
-        // Camera.main.orthographicSize = zoom;
+        Vector2 scrollDelta = Input.mouseScrollDelta;
+        zoom -= scrollDelta.y * zoomSpeed;
+        if (!GameServer.Server.active)
+            zoom = Mathf.Clamp (zoom, minimumZoom, maximumZoom);
+        Camera.main.orthographicSize = zoom;
     }
 
-    public static void SetTarget(Transform target) {
+    public static void SetTarget (Transform target, bool reposition = true) {
         CameraController.target = target;
+        if (reposition)
+            Camera.main.transform.position = target.position + offset;
     }
 }

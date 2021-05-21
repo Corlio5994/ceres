@@ -49,6 +49,18 @@ namespace GameServer {
             }
         }
 
+        public static void VersionAccepted (Client client) {
+            using (Packet packet = new Packet ((int) ServerPackets.VersionAccepted)) {
+                SendTCPData (client, packet);
+            }
+        }
+
+        public static void VersionDenied (Client client) {
+            using (Packet packet = new Packet ((int) ServerPackets.VersionDenied)) {
+                SendTCPData (client, packet);
+            }
+        }
+
         public static void LoginAccepted (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.LoginAccepted)) {
                 SendTCPData (client, packet);

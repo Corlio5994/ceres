@@ -34,7 +34,7 @@ public static partial class Client {
             receivedData = new Packet ();
 
             stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
-            UI.ShowMainMenuPanel ();
+            MainMenuUI.ShowMainMenuPanel ();
         }
 
         public static void SendData (Packet packet) {

@@ -8,10 +8,27 @@ using UnityEngine;
 public static partial class Client {
     public static int id = -1;
     public static bool connected { get; private set; } = false;
+    public static bool loggedIn { get; private set; } = false;
 
-    public static void Connect() {
-        TCP.Connect();
-        connected = true;
+    public static bool Connect () {
+        if (!connected) {
+            TCP.Connect ();
+            connected = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void Login() {
+        loggedIn = true;
+    }
+
+    public static void Logout () {
+        if (loggedIn) {
+            loggedIn = false;
+            PacketSender.Logout ();
+        }
     }
 
     public static void Disconnect () {
@@ -21,8 +38,9 @@ public static partial class Client {
 
             TCP.Disconnect ();
             UDP.Disconnect ();
-            Debug.Log($"[Client] Disconnected");
-            // TODO: Show a disconnect message and quit the game
+            Debug.Log ($"[Client] Disconnected");
+            // TODO: Show a disconnect message
+            Application.Quit ();
         }
     }
 }

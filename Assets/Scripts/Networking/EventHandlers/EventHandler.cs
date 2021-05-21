@@ -8,6 +8,8 @@ public static class EventHandler {
     private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { 
         { (int) ServerPackets.ConnectedTCP, ConnectedTCP }, 
         { (int) ServerPackets.ConnectedUDP, ConnectedUDP }, 
+        { (int) ServerPackets.VersionAccepted, VersionAccepted }, 
+        { (int) ServerPackets.VersionDenied, VersionDenied }, 
         { (int) ServerPackets.LoginAccepted, LoginAccepted }, 
         { (int) ServerPackets.LoginDenied, LoginDenied },
         { (int) ServerPackets.LogoutSuccessful, LogoutSuccessful },
@@ -36,10 +38,21 @@ public static class EventHandler {
 
     private static void ConnectedUDP (Packet packet) {
         Debug.Log ($"[Client] UDP connected");
-        UI.ShowMainMenuPanel ();
+        PacketSender.VersionCheck();
+    }
+
+    private static void VersionAccepted (Packet packet) {
+        Debug.Log($"[Client] Version accepted");
+        MainMenuUI.ShowMainMenuPanel ();
+    }
+
+    private static void VersionDenied (Packet packet) {
+        Debug.Log($"[Client] Game outdated");
+        GameManager.Quit();
     }
 
     private static void LoginAccepted(Packet packet) {
+        Client.Login();
         GameManager.LoadScene("World");
         Debug.Log($"[Client] Logged in");
     }
@@ -61,7 +74,7 @@ public static class EventHandler {
     private static void LoginDenied(Packet packet) {
         Debug.Log($"[Client] Login failed");
         // TODO: Show error message to user
-        UI.ShowCredentialsPanel();
+        MainMenuUI.ShowCredentialsPanel();
     }
 
     private static void LogoutSuccessful(Packet packet) {
@@ -71,6 +84,8 @@ public static class EventHandler {
     }
 
     private static void OtherPlayerLoggedIn(Packet packet) {
+        if (!Client.loggedIn) return;
+
         int clientID = packet.ReadInt();
         Vector3 position = packet.ReadVector();
 
@@ -79,6 +94,8 @@ public static class EventHandler {
     }
 
     private static void OtherPlayerLoggedOut(Packet packet) {
+        if (!Client.loggedIn) return;
+
         int clientID = packet.ReadInt();
 
         GameManager.DestroyPlayer(clientID);
@@ -92,6 +109,8 @@ public static class EventHandler {
     }
 
     private static void OtherPlayerMoved(Packet packet) {
+        if (!Client.loggedIn) return;
+
         int clientID = packet.ReadInt();
         Vector3 destination = packet.ReadVector();
 
@@ -99,6 +118,8 @@ public static class EventHandler {
     }
 
     private static void ChatMessage(Packet packet) {
+        if (!Client.loggedIn) return;
+
         string message = packet.ReadString();
 
         // TODO: Display chat message

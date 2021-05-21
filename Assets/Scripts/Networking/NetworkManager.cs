@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
     void Start() {
-        Client.Connect();
-        UI.ShowLoadingSpinner();
+        if (Client.Connect())
+            MainMenuUI.ShowLoadingSpinner();
+        else
+            MainMenuUI.ShowMainMenuPanel();
     }
 
     void OnApplicationQuit() {

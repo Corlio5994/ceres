@@ -8,6 +8,7 @@ namespace GameServer {
     public static class Server {
         public static int maxPlayers { get; private set; }
         public static int port { get; private set; }
+        public const string version = "1.0.0";
 
         private static Dictionary<int, Client> clients = new Dictionary<int, Client> ();
 
@@ -23,32 +24,44 @@ namespace GameServer {
             Debug.Log ($"[Server] Starting. Port: {port}");
 
             tcpListener = new TcpListener (IPAddress.Any, port);
-            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+            tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, false);
+            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 5000);
+            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 5000);
+
             tcpListener.Start ();
             tcpListener.BeginAcceptTcpClient (TCPConnectCallback, null);
 
             udpListener = new UdpClient (port);
             udpListener.BeginReceive (UDPReceiveCallback, null);
+            FirebaseSetup.Start ();
 
             Debug.Log ("[Server] Started");
         }
 
+        public static void Stop () {
+            tcpListener.Stop ();
+        }
+
         public static Client GetClient (int clientID) {
-            if (clients.ContainsKey(clientID))
+            if (clients.ContainsKey (clientID))
                 return clients[clientID];
             return null;
         }
 
         public static Client[] GetOtherClients (Client client = null) {
-            List<Client> result = new List<Client>();
+            List<Client> result = new List<Client> ();
 
-            for (int i = 0; i < maxPlayers; i++)
-            {
-                if (clients.ContainsKey(i) && clients[i] != client)
-                    result.Add(clients[i]);
+            for (int i = 0; i < maxPlayers; i++) {
+                if (!clients.ContainsKey(i)) continue;
+
+                Client otherClient = clients[i];
+                if (otherClient.loggedIn && otherClient != client)
+                    result.Add (otherClient);
             }
 
-            return result.ToArray();
+            return result.ToArray ();
         }
 
         private static void TCPConnectCallback (IAsyncResult result) {
