@@ -25,10 +25,10 @@ namespace GameServer {
 
             tcpListener = new TcpListener (IPAddress.Any, port);
             tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, false);
-            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 5000);
-            tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 5000);
+            tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.DontLinger, false);
+            tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 5000);
+            tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 5000);
 
             tcpListener.Start ();
             tcpListener.BeginAcceptTcpClient (TCPConnectCallback, null);
@@ -54,7 +54,7 @@ namespace GameServer {
             List<Client> result = new List<Client> ();
 
             for (int i = 0; i < maxPlayers; i++) {
-                if (!clients.ContainsKey(i)) continue;
+                if (!clients.ContainsKey (i)) continue;
 
                 Client otherClient = clients[i];
                 if (otherClient.loggedIn && otherClient != client)
@@ -125,8 +125,10 @@ namespace GameServer {
         }
 
         public static void Disconnect (Client client) {
-            client.Disconnect ();
-            clients.Remove (client.id);
+            ThreadManager.ExecuteOnMainThread (() => {
+                client.Disconnect ();
+                clients.Remove (client.id);
+            });
         }
     }
 }

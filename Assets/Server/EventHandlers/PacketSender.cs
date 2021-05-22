@@ -57,6 +57,7 @@ namespace GameServer {
 
         public static void VersionDenied (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.VersionDenied)) {
+                Debug.Log($"[{client.id}] Failed version check");
                 SendTCPData (client, packet);
             }
         }

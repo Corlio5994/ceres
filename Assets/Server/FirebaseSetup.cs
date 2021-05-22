@@ -14,7 +14,7 @@ namespace GameServer {
 
             StreamReader reader = new StreamReader(path);
             string json = reader.ReadToEnd();
-            app = FirebaseApp.Create (AppOptions.LoadFromJsonConfig(json), "Ceres-Server");
+            app = FirebaseApp.Create (AppOptions.LoadFromJsonConfig(json));
             reader.Close();
             Authoriser.Start ();
             Database.Start();

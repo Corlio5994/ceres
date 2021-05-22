@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace GameServer {    
-    public struct ClientDatabaseData {
-        public Vector3 position;
+namespace GameServer {
+    public class ClientDatabaseData {
+        public Vector3 position = Vector3.zero;
     }
 
     public partial class Client {
@@ -29,27 +29,36 @@ namespace GameServer {
 
             ClientDatabaseData data = await Database.GetUser (user.UserId);
 
-            loggedIn = true;
             player = (OtherPlayer) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
-            return loggedIn;
+            loggedIn = true;
+            Debug.Log ($"[{id}] Logged in");
+            return true;
         }
 
-        public async void Logout () {
+        public void Logout () {
             if (!loggedIn) return;
-            loggedIn = false;
 
-            Database.WriteUser(this);
-            ThreadManager.ExecuteOnMainThread (() => {
-                GameManager.DestroyPlayer (id);
-            });
-            
+            Database.WriteUser (user.UserId, GetWriteableData ());
+            GameManager.DestroyPlayer (id);
+            player = null;
+
             PacketSender.LogoutSuccessful (this);
             PacketSender.OtherPlayerLoggedOut (this);
+
+            Debug.Log ($"[{id}] Logging out");
+            loggedIn = false;
+        }
+
+        private ClientDatabaseData GetWriteableData () {
+            ClientDatabaseData data = new ClientDatabaseData ();
+
+            data.position = player.transform.position;
+
+            return data;
         }
 
         public void Disconnect () {
-            if (loggedIn)
-                Logout ();
+            Logout ();
 
             tcp.Disconnect ();
             udp.Disconnect ();

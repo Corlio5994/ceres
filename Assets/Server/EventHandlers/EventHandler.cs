@@ -45,7 +45,6 @@ namespace GameServer {
 
         private static void Logout (Client client, Packet packet) {
             client.Logout ();
-            Debug.Log ($"[{client.id}] Logging out");
         }
 
         private static void PlayerMoved (Client client, Packet packet) {
