@@ -9,12 +9,15 @@ public class GameManager : MonoBehaviour {
     private static GameManager instance;
     private static Dictionary<int, OtherPlayer> otherPlayers = new Dictionary<int, OtherPlayer> ();
     public static Player player { get; private set; }
-    public static LayerMask groundMask { get; private set; }
 
     [SerializeField] private bool singlePlayer = false;
-    [SerializeField] private LayerMask _groundMask;
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private OtherPlayer _otherPlayerPrefab;
+
+    public static LayerMask groundMask { get; private set; }
+    public static LayerMask interactableMask { get; private set; }
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private LayerMask _interactableMask;
 
     void Awake () {
         if (instance != null)
@@ -24,6 +27,7 @@ public class GameManager : MonoBehaviour {
         playerPrefab = _playerPrefab;
         otherPlayerPrefab = _otherPlayerPrefab;
         groundMask = _groundMask;
+        interactableMask = _interactableMask;
 
         if (playerPrefab == null) Debug.LogError ("Player prefab is equal to null");
     }

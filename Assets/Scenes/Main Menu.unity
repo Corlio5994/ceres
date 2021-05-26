@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -800172892856233489, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -597,8 +597,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ceres
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
-  m_sharedMaterial: {fileID: -8555308586312229725, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 43599f91ebd4be74d9da4ee4e0e1096d, type: 2}
+  m_sharedMaterial: {fileID: 8557229707405116679, guid: 43599f91ebd4be74d9da4ee4e0e1096d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -623,7 +623,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 72
-  m_fontSizeBase: 53.53
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
@@ -845,7 +845,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Password
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -800172892856233489, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1032,7 +1032,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -800172892856233489, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1209,8 +1209,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: v1.0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
-  m_sharedMaterial: {fileID: -8555308586312229725, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1234,8 +1234,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.46
-  m_fontSizeBase: 19.46
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2079,7 +2079,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Username
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -800172892856233489, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2606,7 +2606,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Loading...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 61b067fb68cb2d04f9c98874ca638ed1, type: 2}
   m_sharedMaterial: {fileID: -800172892856233489, guid: 26e7ae0547396054ca40738112755b3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2670,7 +2670,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &2038237842
@@ -2740,7 +2740,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Login
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -8555308586312229725, guid: 1961fb0ea74d0be449d6a610bec8d1cf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
