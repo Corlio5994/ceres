@@ -7,8 +7,6 @@ public class Interactable : MonoBehaviour {
     private bool hoveringOver = false;
 
     public virtual void Interact (Entity entity) {
-        if (!InRange (entity.transform.position)) return;
-
         Destroy (gameObject);
     }
 
@@ -20,9 +18,8 @@ public class Interactable : MonoBehaviour {
         return hoveringOver;
     }
 
-    void OnMouseOver () {
+    protected virtual void OnMouseOver () {
         hoveringOver = true;
-        TooltipUI.ShowTooltip(name);
     }
 
     void OnMouseExit () {

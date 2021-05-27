@@ -1,0 +1,31 @@
+{
+  "weapons": [
+    {
+      "id": 0,
+      "name": "Wooden Greatsword",
+      "description": "A simple wooden blade.",
+      "rarity": 1,
+      "weight": 1,
+      "damage": 10,
+      "attackTime": 1,
+      "swingRange": 1.2,
+      "weaponType": 0,
+      "oneHanded": true
+    }
+  ],
+  "armours": [
+    {
+      "id": 1,
+      "name": "Wooden Shield",
+      "description": "A block of wood made into a shield.",
+      "rarity": 1,
+      "weight": 3,
+      "armourSlot": 0,
+      "defence": 10
+    }
+  ],
+  "food": [],
+  "potions": [],
+  "materials": [],
+  "miscelaneous": []
+}

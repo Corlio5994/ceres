@@ -13,7 +13,7 @@ namespace GameServer {
         public bool loggedIn { get; private set; } = false;
         public Firebase.Auth.FirebaseUser user { get; private set; }
 
-        public OtherPlayer player;
+        public Person player;
 
         public Client (int id) {
             this.id = id;
@@ -29,7 +29,7 @@ namespace GameServer {
 
             ClientDatabaseData data = await Database.GetUser (user.UserId);
 
-            player = (OtherPlayer) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
+            player = (Person) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
             loggedIn = true;
             Debug.Log ($"[{id}] Logged in");
             return true;

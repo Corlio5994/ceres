@@ -1,22 +1,29 @@
 using UnityEngine;
 
 public class Player : Entity {
-    protected virtual void Update () {
-        if (EscapeMenuUI.active) return;
+    public static Player instance;
+
+    void Awake () {
+        instance = this;
+    }
+
+    protected override void Update () {
+        base.Update ();
+
+        if (EscapeMenuUI.active || InventoryUI.shown) return;
 
         if (Input.GetMouseButtonDown (0)) {
             Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast (ray, out hit, Mathf.Infinity, GameManager.interactableMask)) {
-                Interactable newInteractable = hit.collider.GetComponent<Interactable>();
-                Interact(newInteractable);
+                Interactable newInteractable = hit.collider.GetComponent<Interactable> ();
+                Interact (newInteractable);
                 // TODO: Send to server
-            }
-
-            else if (Physics.Raycast (ray, out hit, Mathf.Infinity, GameManager.groundMask)) {
+            } else if (Physics.Raycast (ray, out hit, Mathf.Infinity, GameManager.groundMask)) {
                 SetDestination (hit.point);
                 PacketSender.PlayerMoved (hit.point);
             }
         }
+
     }
 }

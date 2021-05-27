@@ -16,7 +16,7 @@ public class EscapeMenuUI : MonoBehaviour {
     }
 
     void Update () {
-        if (Input.GetKeyDown (KeyCode.Escape)) {
+        if (Input.GetKeyDown (KeyCode.Escape) && !InventoryUI.shown) {
             escapeMenu.gameObject.SetActive (!escapeMenu.gameObject.activeInHierarchy);
         }
     }

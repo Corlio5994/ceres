@@ -7,12 +7,12 @@ public class GameManager : MonoBehaviour {
     private static Entity playerPrefab;
     private static Entity otherPlayerPrefab;
     private static GameManager instance;
-    private static Dictionary<int, OtherPlayer> otherPlayers = new Dictionary<int, OtherPlayer> ();
+    private static Dictionary<int, Person> otherPlayers = new Dictionary<int, Person> ();
     public static Player player { get; private set; }
 
     [SerializeField] private bool singlePlayer = false;
     [SerializeField] private Player _playerPrefab;
-    [SerializeField] private OtherPlayer _otherPlayerPrefab;
+    [SerializeField] private Person _otherPlayerPrefab;
 
     public static LayerMask groundMask { get; private set; }
     public static LayerMask interactableMask { get; private set; }
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour {
         Entity newPlayer = Instantiate (clientID == -1 ? playerPrefab : otherPlayerPrefab, position, rotation);
 
         if (clientID != -1) {
-            otherPlayers.Add (clientID, (OtherPlayer) newPlayer);
+            otherPlayers.Add (clientID, (Person) newPlayer);
         } else {
             player = (Player) newPlayer;
             CameraController.SetTarget (player.transform);
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour {
         otherPlayers.Remove (clientID);
     }
 
-    public static OtherPlayer GetPlayer (int clientID) {
+    public static Person GetPlayer (int clientID) {
         return otherPlayers[clientID];
     }
 
