@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 
 [RequireComponent (typeof (TMP_Text))]
-public class TooltipText : MonoBehaviour {
+public class AutosizeText : MonoBehaviour {
     private TMP_Text text;
     private RectTransform rectTransform;
     [SerializeField] private float maxWidth = 300;

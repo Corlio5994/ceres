@@ -10,7 +10,7 @@ public class Player : Entity {
     protected override void Update () {
         base.Update ();
 
-        if (EscapeMenuUI.active || InventoryUI.shown) return;
+        if (GameManager.showingUI) return;
 
         if (Input.GetMouseButtonDown (0)) {
             Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);

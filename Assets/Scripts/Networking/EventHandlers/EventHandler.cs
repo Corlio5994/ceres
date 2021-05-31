@@ -121,7 +121,6 @@ public static class EventHandler {
         if (!Client.loggedIn) return;
 
         string message = packet.ReadString();
-
-        // TODO: Display chat message
+        Chat.AddMessage(message);
     }
 }

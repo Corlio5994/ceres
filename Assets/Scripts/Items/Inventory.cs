@@ -11,6 +11,10 @@ public class Inventory {
 
     private float availableSpace { get { return maxWeight - weight; } }
 
+    public Inventory(float maxWeight = 30) {
+        this.maxWeight = maxWeight;
+    }
+
     public Item AddItem (Item item) {
         if (availableSpace < item.weight) return item;
 

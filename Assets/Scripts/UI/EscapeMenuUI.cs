@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EscapeMenuUI : MonoBehaviour {
-    public static bool active { get { return escapeMenu.gameObject.activeInHierarchy; } }
+    public static bool shown { get; private set; }
     private static RectTransform escapeMenu;
     [SerializeField] private RectTransform _escapeMenu;
 
@@ -12,29 +12,32 @@ public class EscapeMenuUI : MonoBehaviour {
     }
 
     void Start () {
-        HideMenu ();
+        Hide ();
     }
 
     void Update () {
-        if (Input.GetKeyDown (KeyCode.Escape) && !InventoryUI.shown) {
-            escapeMenu.gameObject.SetActive (!escapeMenu.gameObject.activeInHierarchy);
-        }
+        if (Input.GetKeyDown (KeyCode.Escape) && shown)
+            Hide ();
+        if (Input.GetKeyDown (KeyCode.Escape) && !GameManager.showingUI)
+            Show ();
     }
 
-    private void HideMenu () {
+    private void Hide () {
         escapeMenu.gameObject.SetActive (false);
+        shown = false;
     }
 
-    private void ShowMenu () {
+    private void Show () {
         escapeMenu.gameObject.SetActive (true);
+        shown = true;
     }
 
     public void Back () {
-        HideMenu ();
+        Hide ();
     }
 
     public void Quit () {
-        GameManager.Quit();
+        GameManager.Quit ();
     }
 
     public void Logout () {

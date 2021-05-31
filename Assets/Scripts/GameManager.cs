@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     private static GameManager instance;
     private static Dictionary<int, Person> otherPlayers = new Dictionary<int, Person> ();
     public static Player player { get; private set; }
+    public static bool showingUI { get; private set; } = false;
 
     [SerializeField] private bool singlePlayer = false;
     [SerializeField] private Player _playerPrefab;
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour {
 
     public static LayerMask groundMask { get; private set; }
     public static LayerMask interactableMask { get; private set; }
+
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private LayerMask _interactableMask;
 
@@ -45,11 +47,20 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    void LateUpdate () {
+        showingUI = ShowingUI ();
+    }
+
+    private static bool ShowingUI () {
+        return InventoryUI.shown || EscapeMenuUI.shown || ContainerUI.shown || Chat.typing;
+    }
+
     public static void LoadScene (string scene) {
         SceneManager.LoadSceneAsync (scene);
     }
 
     public static Entity SpawnPlayer (Vector3 position, Quaternion rotation, int clientID = -1) {
+        Debug.Log(clientID);
         Entity newPlayer = Instantiate (clientID == -1 ? playerPrefab : otherPlayerPrefab, position, rotation);
 
         if (clientID != -1) {

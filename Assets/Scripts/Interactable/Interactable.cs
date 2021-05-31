@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour {
-    private float interactRadius = 3f;
+    protected float interactRadius = 3f;
     private bool hoveringOver = false;
 
     public virtual void Interact (Entity entity) {

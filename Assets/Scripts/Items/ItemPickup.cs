@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemPickup : Interactable {
-    [SerializeField] private int itemID;
-    [SerializeField] private int count = 1;
     private Item item;
+    private static int itemDespawnTime = 300;
 
     void Start () {
-        item = ItemDatabase.GetItem (itemID, count);
-        name = item.name;
+        Destroy (gameObject, itemDespawnTime);
+    }
+
+    void CheckSurroundingPickups () {
+        Collider[] hitColliders = Physics.OverlapSphere (transform.position, interactRadius, GameManager.interactableMask);
+        foreach (var hitCollider in hitColliders) {
+            ItemPickup pickup = hitCollider.GetComponent<ItemPickup> ();
+            if (pickup != null && pickup != this && pickup.item.id == item.id) {
+                pickup.item.count += item.count;
+                Destroy (gameObject);
+                return;
+            }
+        }
     }
 
     public void SetItem (Item item) {
         this.item = item;
+        CheckSurroundingPickups ();
     }
 
     public override void Interact (Entity entity) {
