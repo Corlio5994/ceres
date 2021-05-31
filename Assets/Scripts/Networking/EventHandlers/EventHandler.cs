@@ -7,7 +7,6 @@ public static class EventHandler {
     private delegate void PacketHandler (Packet packet);
     private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { 
         { (int) ServerPackets.ConnectedTCP, ConnectedTCP }, 
-        { (int) ServerPackets.ConnectedUDP, ConnectedUDP }, 
         { (int) ServerPackets.VersionAccepted, VersionAccepted }, 
         { (int) ServerPackets.VersionDenied, VersionDenied }, 
         { (int) ServerPackets.LoginAccepted, LoginAccepted }, 
@@ -33,11 +32,6 @@ public static class EventHandler {
         Client.id = clientID;
         Debug.Log ($"[Client] TCP connected. ClientID: {clientID}");
 
-        Client.UDP.Connect (Client.TCP.GetPort());
-    }
-
-    private static void ConnectedUDP (Packet packet) {
-        Debug.Log ($"[Client] UDP connected");
         PacketSender.VersionCheck();
     }
 

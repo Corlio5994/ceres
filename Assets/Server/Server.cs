@@ -13,7 +13,6 @@ namespace GameServer {
         private static Dictionary<int, Client> clients = new Dictionary<int, Client> ();
 
         private static TcpListener tcpListener;
-        private static UdpClient udpListener;
         public static bool active { get; private set; } = false;
 
         public static void Start () {
@@ -33,8 +32,6 @@ namespace GameServer {
             tcpListener.Start ();
             tcpListener.BeginAcceptTcpClient (TCPConnectCallback, null);
 
-            udpListener = new UdpClient (port);
-            udpListener.BeginReceive (UDPReceiveCallback, null);
             FirebaseSetup.Start ();
 
             Debug.Log ("[Server] Started");
@@ -81,47 +78,6 @@ namespace GameServer {
             }
 
             Debug.Log ($"[Server] Failed to connect: server full ({client.Client.RemoteEndPoint})");
-        }
-
-        private static void UDPReceiveCallback (IAsyncResult result) {
-            try {
-                IPEndPoint endPoint = new IPEndPoint (IPAddress.Any, 0);
-                byte[] data = udpListener.EndReceive (result, ref endPoint);
-                udpListener.BeginReceive (UDPReceiveCallback, null);
-
-                if (data.Length < 4) {
-                    return;
-                }
-
-                using (Packet packet = new Packet (data)) {
-                    int clientID = packet.ReadInt ();
-                    if (clientID < 0 || maxPlayers <= clientID) {
-                        return;
-                    }
-
-                    Client client = GetClient (clientID);
-                    if (client.udp.endPoint == null) {
-                        client.udp.Connect (endPoint);
-                        return;
-                    }
-
-                    if (client.udp.endPoint.ToString () == endPoint.ToString ()) {
-                        client.udp.HandleData (packet);
-                    }
-                }
-            } catch (Exception exception) {
-                Debug.Log ($"[Server] Error receivng UDP: {exception}");
-            }
-        }
-
-        public static void SendUDPData (IPEndPoint endpoint, Packet packet) {
-            try {
-                if (endpoint != null) {
-                    udpListener.BeginSend (packet.ToArray (), packet.Length (), endpoint, null, null);
-                }
-            } catch (Exception exception) {
-                Debug.Log ($"[Server] Error sending UDP: {exception}");
-            }
         }
 
         public static void Disconnect (Client client) {

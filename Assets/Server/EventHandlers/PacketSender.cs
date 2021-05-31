@@ -19,32 +19,10 @@ namespace GameServer {
             }
         }
 
-        private static void SendUDPData (Client client, Packet packet) {
-            packet.WriteLength ();
-            client.udp.SendData (packet);
-        }
-
-        private static void SendUDPDataToAll (Packet packet, Client exceptClient = null) {
-            packet.WriteLength ();
-            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
-                Client client = Server.GetClient (clientID);
-
-                if (client != exceptClient) {
-                    client.udp.SendData (packet);
-                }
-            }
-        }
-
         #region Packets
         public static void ConnectedTCP (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.ConnectedTCP)) {
                 packet.Write (client.id);
-                SendTCPData (client, packet);
-            }
-        }
-
-        public static void ConnectedUDP (Client client) {
-            using (Packet packet = new Packet ((int) ServerPackets.ConnectedUDP)) {
                 SendTCPData (client, packet);
             }
         }

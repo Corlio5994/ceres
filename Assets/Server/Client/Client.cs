@@ -18,7 +18,6 @@ namespace GameServer {
         public Client (int id) {
             this.id = id;
             tcp = new TCP (this);
-            udp = new UDP (this);
         }
 
         public async Task<bool> Login (string email, string password) {
@@ -61,7 +60,6 @@ namespace GameServer {
             Logout ();
 
             tcp.Disconnect ();
-            udp.Disconnect ();
             Debug.Log ($"[{id}] Disconnected");
         }
     }
