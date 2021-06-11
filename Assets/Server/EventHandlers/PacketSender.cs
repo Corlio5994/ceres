@@ -35,7 +35,7 @@ namespace GameServer {
 
         public static void VersionDenied (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.VersionDenied)) {
-                Debug.Log ($"[{client.id}] Failed version check");
+                Console.Log ($"[{client.id}] Failed version check");
                 SendTCPData (client, packet);
             }
         }
@@ -57,7 +57,6 @@ namespace GameServer {
                     packet.Write (otherClient.id);
                     packet.Write (otherClient.player.transform.position);
                     packet.Write (otherClient.player.transform.rotation);
-                    Debug.Log ("dddd" + otherClient.id);
                 }
 
                 SendTCPData (client, packet);

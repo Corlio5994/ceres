@@ -11,7 +11,7 @@ public class StartScene : MonoBehaviour {
 
     void Start () {
         if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null || clientType == ClientType.Server) {
-            Debug.Log("[Server] Preparing to launch");
+            Console.Log("Preparing to launch");
             GameManager.LoadScene ("World");
         } else {
             GameManager.LoadScene ("Main Menu");
