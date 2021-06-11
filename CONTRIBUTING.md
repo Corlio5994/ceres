@@ -1,5 +1,5 @@
 
-# Contributing to Auth0 projects
+# Contributing
 
 A big welcome and thank you for looking at Ceres!
 If you need any help with contributing, please join our [Discord](https://discord.gg/rECRhBT6Et) and ask for help!
