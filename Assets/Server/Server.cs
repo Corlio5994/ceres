@@ -20,7 +20,7 @@ namespace GameServer {
             maxPlayers = Constants.maxPlayers;
             port = Constants.port;
 
-            Debug.Log ($"[Server] Starting. Port: {port}");
+            Console.Log ($"Server starting. Port: {port}");
 
             tcpListener = new TcpListener (IPAddress.Any, port);
             tcpListener.Server.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
@@ -34,7 +34,7 @@ namespace GameServer {
 
             FirebaseSetup.Start ();
 
-            Debug.Log ("[Server] Started");
+            Console.Log ("Server started");
         }
 
         public static void Stop () {
@@ -64,11 +64,11 @@ namespace GameServer {
         private static void TCPConnectCallback (IAsyncResult result) {
             TcpClient client = tcpListener.EndAcceptTcpClient (result);
             tcpListener.BeginAcceptTcpClient (TCPConnectCallback, null);
-            Debug.Log ($"[Server] Incoming connection ({client.Client.RemoteEndPoint})");
+            Console.Log ($"Incoming connection ({client.Client.RemoteEndPoint.ToString()})");
 
             for (int id = 0; id < maxPlayers; id++) {
                 if (!clients.ContainsKey (id)) {
-                    Debug.Log ($"[{id}] Creating new client");
+                    Console.Log ($"[{id}] Creating new client");
                     Client newClient = new Client (id);
                     newClient.tcp.Connect (client);
 
@@ -77,7 +77,7 @@ namespace GameServer {
                 }
             }
 
-            Debug.Log ($"[Server] Failed to connect: server full ({client.Client.RemoteEndPoint})");
+            Console.Log ($"Failed to connect: server full ({client.Client.RemoteEndPoint})");
         }
 
         public static void Disconnect (Client client) {

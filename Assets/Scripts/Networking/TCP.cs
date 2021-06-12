@@ -12,7 +12,7 @@ public static partial class Client {
         private const int dataBufferSize = 4096;
 
         public static void Connect () {
-            Debug.Log ("[Client] Connecting TCP");
+            Console.Log ("Connecting TCP");
 
             socket = new TcpClient {
                 ReceiveBufferSize = dataBufferSize,
@@ -43,7 +43,7 @@ public static partial class Client {
                     stream.BeginWrite (packet.ToArray (), 0, packet.Length (), null, null);
                 }
             } catch (Exception exception) {
-                Debug.LogError ($"[Client] Error sending TCP: {exception}");
+                Console.LogError ($"Error sending TCP: {exception}");
             }
         }
 

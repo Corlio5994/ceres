@@ -30,25 +30,25 @@ public static class EventHandler {
         int clientID = packet.ReadInt ();
 
         Client.id = clientID;
-        Debug.Log ($"[Client] TCP connected. ClientID: {clientID}");
+        Console.Log ($"TCP connected. ClientID: {clientID}");
 
         PacketSender.VersionCheck();
     }
 
     private static void VersionAccepted (Packet packet) {
-        Debug.Log($"[Client] Version accepted");
+        Console.Log($"Version accepted");
         MainMenuUI.ShowMainMenuPanel ();
     }
 
     private static void VersionDenied (Packet packet) {
-        Debug.Log($"[Client] Game outdated");
+        Console.Log($"Game outdated");
         GameManager.Quit();
     }
 
     private static void LoginAccepted(Packet packet) {
         Client.Login();
         GameManager.LoadScene("World");
-        Debug.Log($"[Client] Logged in");
+        Console.Log($"Logged in");
     }
 
     private static void PlayerData(Packet packet) {
@@ -66,13 +66,13 @@ public static class EventHandler {
     }
 
     private static void LoginDenied(Packet packet) {
-        Debug.Log($"[Client] Login failed");
+        Console.Log($"Login failed");
         // TODO: Show error message to user
         MainMenuUI.ShowCredentialsPanel();
     }
 
     private static void LogoutSuccessful(Packet packet) {
-        Debug.Log($"[Client] Logged out");
+        Console.Log($"Logged out");
         GameManager.Logout();
         GameManager.LoadScene("Main Menu");
     }
@@ -84,7 +84,7 @@ public static class EventHandler {
         Vector3 position = packet.ReadVector();
 
         GameManager.SpawnPlayer(position, Quaternion.identity, clientID);
-        Debug.Log($"[Client] Other client connected. ID: {clientID}");
+        Console.Log($"Other client connected. ID: {clientID}");
     }
 
     private static void OtherPlayerLoggedOut(Packet packet) {
@@ -93,7 +93,7 @@ public static class EventHandler {
         int clientID = packet.ReadInt();
 
         GameManager.DestroyPlayer(clientID);
-        Debug.Log($"[Client] Other client disconnected. ID: {clientID}");
+        Console.Log($"Other client disconnected. ID: {clientID}");
     }
 
     private static void PlayerPosition(Packet packet) {

@@ -30,8 +30,6 @@ public class GameManager : MonoBehaviour {
         otherPlayerPrefab = _otherPlayerPrefab;
         groundMask = _groundMask;
         interactableMask = _interactableMask;
-
-        if (playerPrefab == null) Debug.LogError ("Player prefab is equal to null");
     }
 
     void Start () {
@@ -60,7 +58,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public static Entity SpawnPlayer (Vector3 position, Quaternion rotation, int clientID = -1) {
-        Debug.Log(clientID);
+        Console.Log($"Spawning player: {clientID}");
         Entity newPlayer = Instantiate (clientID == -1 ? playerPrefab : otherPlayerPrefab, position, rotation);
 
         if (clientID != -1) {

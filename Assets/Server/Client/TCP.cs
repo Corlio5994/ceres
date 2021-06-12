@@ -33,7 +33,7 @@ namespace GameServer {
 
                 stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
 
-                Debug.Log ($"[{client.id}] Sucessfully connected TCP");
+                Console.Log ($"[{client.id}] Sucessfully connected TCP");
                 PacketSender.ConnectedTCP (client);
             }
 
@@ -43,7 +43,7 @@ namespace GameServer {
                         stream.BeginWrite (packet.ToArray (), 0, packet.Length (), null, null);
                     }
                 } catch (Exception exception) {
-                    Debug.Log ($"[{client.id}] Error sending TCP: {exception}");
+                    Console.LogError ($"[{client.id}] Error sending TCP: {exception}");
                 }
             }
 
@@ -61,7 +61,7 @@ namespace GameServer {
                     receivedData.Reset (HandleData (data));
                     stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
                 } catch (Exception exception) {
-                    Debug.Log ($"[{client.id}] Error receiving TCP: {exception}");
+                    Console.LogError ($"[{client.id}] Error receiving TCP: {exception}");
                     Server.Disconnect (client);
                 }
             }
