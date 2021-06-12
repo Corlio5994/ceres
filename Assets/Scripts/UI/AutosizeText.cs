@@ -3,6 +3,9 @@ using UnityEngine;
 //Hey! This is Corey... I'm probably going to write some extra verbose comments for this and the other UI stuff, 
 //as I'm just learning which structures are which in Unity. Feel free to ignore the comments if you're already 
 //familiar with unity modules and stuff! This is more just to help me develop an understanding (:
+
+//This class uses a rectTransform to resize the text which appears in chatbox
+
 //adds text to the autosizetext class using scripting API
 [RequireComponent (typeof (TMP_Text))]
 //all unity classes inherit from MonoBehaviour
