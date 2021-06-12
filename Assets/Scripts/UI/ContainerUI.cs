@@ -41,6 +41,7 @@ public class ContainerUI : MonoBehaviour {
 
     void Update () {
         if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Tab)) && shown) {
+            container.Close ();
             Hide ();
         }
     }

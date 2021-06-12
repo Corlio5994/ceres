@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Container : Interactable {
     [HideInInspector] public Inventory inventory { get; private set; } = new Inventory (9999);
+    [SerializeField] Animator animator;
 
     void Start () {
         inventory.AddItem (ItemDatabase.GetItem (0, 10));
@@ -12,6 +13,15 @@ public class Container : Interactable {
 
     public override void Interact (Entity entity) {
         ContainerUI.Show (this);
+        Open ();
+    }
+
+    public void Open () {
+        animator.SetTrigger ("open");
+    }
+
+    public void Close () {
+        animator.SetTrigger ("close");
     }
 
     protected override void OnMouseOver () {
