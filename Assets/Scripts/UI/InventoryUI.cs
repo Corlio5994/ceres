@@ -130,7 +130,5 @@ public class InventoryUI : MonoBehaviour {
         } else {
             currentItemText.text = $"{selectedItem.count}x {selectedItem.name}";
         }
-
-        
     }
 }

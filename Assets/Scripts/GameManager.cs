@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour {
             SpawnPlayer (Vector3.up, Quaternion.identity);
         } else if (Client.connected) {
             PacketSender.PlayerDataRequest ();
+            PacketSender.ItemPickupDataRequest();
+            PacketSender.ContainerDataRequest();
         } else {
             GameServer.Server.Start ();
 
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private static bool ShowingUI () {
-        return InventoryUI.shown || EscapeMenuUI.shown || ContainerUI.shown || Chat.typing;
+        return InventoryUI.shown || EscapeMenuUI.shown || ContainerUI.shown || Chat.typing || Console.shown;
     }
 
     public static void LoadScene (string scene) {

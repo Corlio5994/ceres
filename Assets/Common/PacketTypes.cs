@@ -11,7 +11,14 @@ public enum ServerPackets {
     OtherPlayerLoggedOut,
     PlayerPosition,
     OtherPlayerMoved,
-    ChatMessage
+    ChatMessage,
+
+    ItemPickupData,
+    ContainerData,
+    ItemDropped,
+    ItemPickedUp,
+    ContainerDeposit,
+    ContainerWithdraw
 }
 
 public enum ClientPackets {
@@ -21,5 +28,12 @@ public enum ClientPackets {
     Logout,
     PlayerDataRequest,
     PlayerMoved,
-    ChatMessage
+    ChatMessage,
+    
+    ItemPickupDataRequest,
+    ContainerDataRequest,
+    ItemDropped,
+    ItemPickedUp,
+    ContainerDeposit,
+    ContainerWithdraw
 }

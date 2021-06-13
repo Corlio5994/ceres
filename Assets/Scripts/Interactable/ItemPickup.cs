@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemPickup : Interactable {
-    private Item item;
     private static int itemDespawnTime = 300;
+    private static Dictionary<int, ItemPickup> pickups = new Dictionary<int, ItemPickup> ();
+
+    public Item item { get; private set; }
+    public int id { get; private set; }
 
     void Start () {
         Destroy (gameObject, itemDespawnTime);
@@ -22,7 +25,20 @@ public class ItemPickup : Interactable {
         }
     }
 
-    public void SetItem (Item item) {
+    public static ItemPickup Get (int pickupID) {
+        return pickups[pickupID];
+    }
+
+    public void TakeItem (int count) {
+        item.count -= count;
+        if (item.count <= 0)
+            Destroy (gameObject);
+    }
+
+    public void SetItem (Item item, int pickupID) {
+        if (pickupID == -1) pickupID = pickups.Count;
+        pickups[pickupID] = this;
+
         this.item = item;
         CheckSurroundingPickups ();
     }
@@ -30,6 +46,9 @@ public class ItemPickup : Interactable {
     public override void Interact (Entity entity) {
         item = entity.AddItem (item);
         if (item == null) Destroy (gameObject);
+
+        if (entity.GetType ().IsSubclassOf (typeof (Player)))
+            PacketSender.ItemPickedUp (this);
     }
 
     protected override void OnMouseOver () {

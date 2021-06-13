@@ -19,7 +19,20 @@ namespace GameServer {
             }
         }
 
+        private static void BroadcastLoggedIn (Packet packet, Client exceptClient = null) {
+            packet.WriteLength ();
+            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
+                Client client = Server.GetClient (clientID);
+                if (client == null || client.loggedIn) continue;
+
+                if (client != exceptClient) {
+                    client.tcp.SendData (packet);
+                }
+            }
+        }
+
         #region Packets
+        #region Admin
         public static void ConnectedTCP (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.ConnectedTCP)) {
                 packet.Write (client.id);
@@ -80,14 +93,14 @@ namespace GameServer {
             using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedIn)) {
                 packet.Write (client.id);
                 packet.Write (client.player.transform.position);
-                BroadcastTCPData (packet, client);
+                BroadcastLoggedIn (packet, client);
             }
         }
 
         public static void OtherPlayerLoggedOut (Client client) {
             using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
                 packet.Write (client.id);
-                BroadcastTCPData (packet, client);
+                BroadcastLoggedIn (packet, client);
             }
         }
 
@@ -102,16 +115,66 @@ namespace GameServer {
             using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerMoved)) {
                 packet.Write (client.id);
                 packet.Write (destination);
-                BroadcastTCPData (packet, client);
+                BroadcastLoggedIn (packet, client);
             }
         }
 
         public static void ChatMessage (Client client, string message) {
             using (Packet packet = new Packet ((int) ServerPackets.ChatMessage)) {
                 packet.Write (message);
-                BroadcastTCPData (packet, client);
+                BroadcastLoggedIn (packet, client);
             }
         }
+        #endregion
+
+        #region Items
+        public static void ItemPickupData (Client client) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (client.id);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+
+        public static void ContainerData (Client client) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (client.id);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+
+        public static void ItemDropped (Client client, ItemPickup pickup) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (pickup.id);
+                packet.Write (pickup.transform.position);
+                packet.Write (pickup.item.id);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+
+        public static void ItemPickedUp (Client client, ItemPickup pickup, int removedCount) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (pickup.id);
+                packet.Write (removedCount);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+
+        public static void ContainerDeposit (Client client, int containerID, int itemID) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (containerID);
+                packet.Write (itemID);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+
+        public static void ContainerWithdraw (Client client, int containerID, int itemID) {
+            using (Packet packet = new Packet ((int) ServerPackets.OtherPlayerLoggedOut)) {
+                packet.Write (containerID);
+                packet.Write (itemID);
+                BroadcastLoggedIn (packet, client);
+            }
+        }
+        #endregion
         #endregion
     }
 }

@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class ContainerUI : MonoBehaviour {
     public static bool shown { get; private set; }
-    private static Container container;
+    public static Container container { get; private set; }
     private static ContainerUI instance;
     private static TMP_Text currentItemText;
     private static Item selectedItem;
+    private static bool deposit;
     private static Dictionary<int, TMP_Text> playerItemsDisplays;
     private static Dictionary<int, TMP_Text> containerItemsDisplays;
 
@@ -46,7 +47,7 @@ public class ContainerUI : MonoBehaviour {
         }
     }
 
-    public static void Show (Container container) {
+    public static void Show (Container container, bool reset = true) {
         ContainerUI.container = container;
 
         playerItemsDisplays = new Dictionary<int, TMP_Text> ();
@@ -58,7 +59,8 @@ public class ContainerUI : MonoBehaviour {
         foreach (Transform child in instance.containerItemsParent) {
             Destroy (child.gameObject);
         }
-        currentItemText = null;
+        if (reset)
+            currentItemText = null;
 
         List<Item> playerItems = Player.instance.inventory.GetSortedItems ();
         foreach (Item item in playerItems) {
@@ -69,7 +71,10 @@ public class ContainerUI : MonoBehaviour {
             CreateItemButton (item, instance.containerItemsParent, false, containerItemsDisplays);
         }
 
-        ShowAnyItem ();
+        if (reset)
+            ShowAnyItem ();
+        else
+            ShowItem (selectedItem, deposit);
 
         shown = true;
         instance.content.SetActive (true);
@@ -77,10 +82,17 @@ public class ContainerUI : MonoBehaviour {
 
     public static void CreateItemButton (Item item, Transform parent, bool deposit, Dictionary<int, TMP_Text> data) {
         TMP_Text text = Instantiate (instance.itemPrefab, Vector3.zero, Quaternion.identity, parent);
-        Button button = text.GetComponent<Button> ();
+
 
         text.text = $"{item.count}x {item.name}";
+        for (int i = 0; i < parent.childCount; i++) {
+            TMP_Text otherText = parent.GetChild(i).GetComponent<TMP_Text>();
+            if (string.Compare(text.text, otherText.text) < 0) {
+                text.transform.SetSiblingIndex(i);
+            }
+        }
 
+        Button button = text.GetComponent<Button> ();
         UnityAction listener = () => {
             ShowItem (item, deposit);
         };
@@ -103,6 +115,7 @@ public class ContainerUI : MonoBehaviour {
 
     public static void ShowItem (Item item, bool deposit) {
         selectedItem = item;
+        ContainerUI.deposit = deposit;
 
         instance.itemTitle.text = item.name;
         instance.itemCategory.text = item.category;
@@ -139,7 +152,7 @@ public class ContainerUI : MonoBehaviour {
         if (selectedItem == null) return;
 
         int id = selectedItem.id;
-        Item withdrawn = ItemDatabase.GetItem (id);
+        Item deposited = ItemDatabase.GetItem (id);
         int leftovers = Player.instance.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
@@ -151,23 +164,24 @@ public class ContainerUI : MonoBehaviour {
         }
 
         if (containerItemsDisplays.ContainsKey (id)) {
-            container.inventory.AddItem (withdrawn);
+            container.inventory.AddItem (deposited);
             Item newAmount = container.inventory.GetItem (id);
             containerItemsDisplays[id].text = $"{newAmount.count}x {newAmount.name}";
         } else {
-            container.inventory.AddItem (withdrawn);
-            CreateItemButton (withdrawn, instance.containerItemsParent, false, containerItemsDisplays);
+            container.inventory.AddItem (deposited);
+            CreateItemButton (deposited, instance.containerItemsParent, false, containerItemsDisplays);
         }
+
+        PacketSender.ContainerDeposit (container, deposited);
     }
 
     public void Withdraw () {
         if (selectedItem == null) return;
 
-        Item withdrawn = (Item) selectedItem.Clone ();
-        withdrawn.count = 1;
+        int id = selectedItem.id;
+        Item withdrawn = ItemDatabase.GetItem (id);
         if (!Player.instance.inventory.HasSpace (withdrawn)) return;
 
-        int id = selectedItem.id;
         int leftovers = container.inventory.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
@@ -186,6 +200,7 @@ public class ContainerUI : MonoBehaviour {
             Player.instance.AddItem (withdrawn);
             CreateItemButton (withdrawn, instance.playerItemsParent, true, playerItemsDisplays);
         }
-    }
 
+        PacketSender.ContainerWithdraw (container, withdrawn);
+    }
 }

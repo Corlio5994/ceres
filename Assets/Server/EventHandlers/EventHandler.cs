@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 namespace GameServer {
     public static class EventHandler {
         private delegate void PacketHandler (Client client, Packet packet);
-        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
-                (int) ClientPackets.VersionCheck, VersionCheck }, {
-                (int) ClientPackets.Login, Login }, {
-                (int) ClientPackets.Logout, Logout }, {
-                (int) ClientPackets.PlayerMoved, PlayerMoved }, {
-                (int) ClientPackets.ChatMessage, ChatMessage }, {
-                (int) ClientPackets.PlayerDataRequest, PlayerDataRequest }
+        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { 
+            { (int) ClientPackets.VersionCheck, VersionCheck}, 
+            { (int) ClientPackets.Login, Login }, 
+            { (int) ClientPackets.Logout, Logout }, 
+            { (int) ClientPackets.PlayerMoved, PlayerMoved }, 
+            { (int) ClientPackets.ChatMessage, ChatMessage }, 
+            { (int) ClientPackets.PlayerDataRequest, PlayerDataRequest },
+            { (int) ClientPackets.ItemPickupDataRequest, ItemPickupDataRequest },
+            { (int) ClientPackets.ContainerDataRequest, ContainerDataRequest },
+            { (int) ClientPackets.ItemDropped, ItemDropped },
+            { (int) ClientPackets.ItemPickedUp, ItemPickedUp },
+            { (int) ClientPackets.ContainerDeposit, ContainerDeposit },
+            { (int) ClientPackets.ContainerWithdraw, ContainerWithdraw },
         };
 
         public static void HandlePacket (Client client, Packet packet) {
@@ -62,5 +68,26 @@ namespace GameServer {
         private static void PlayerDataRequest (Client client, Packet packet) {
             PacketSender.PlayerData (client);
         }
+
+        private static void ItemPickupDataRequest(Client client, Packet packet)
+        {
+        }
+
+        private static void ContainerDataRequest(Client client, Packet packet)
+        {
+        }
+        private static void ItemDropped(Client client, Packet packet)
+        {
+        }
+        private static void ItemPickedUp(Client client, Packet packet)
+        {
+        }
+        private static void ContainerDeposit(Client client, Packet packet)
+        {
+        }
+        private static void ContainerWithdraw(Client client, Packet packet)
+        {
+        }
+
     }
 }

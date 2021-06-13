@@ -11,6 +11,7 @@ public class ItemDatabase : MonoBehaviour {
     [SerializeField] public Color[] _rarityColours;
     [SerializeField] private string textAssetPath;
     [SerializeField] private ItemPickup itemPickupPrefab;
+    [SerializeField] private Container containerPrefab;
 
     void Awake () {
         instance = this;
@@ -38,10 +39,16 @@ public class ItemDatabase : MonoBehaviour {
         return item;
     }
 
-    public static void SpawnItemPickup (int id, int count, Vector3 position) {
+    public static ItemPickup SpawnItemPickup (int id, int count, Vector3 position, int pickupID = -1) {
         ItemPickup pickup = Instantiate (instance.itemPickupPrefab, position, Quaternion.identity);
         Item item = GetItem (id, count);
-        pickup.SetItem (item);
+        pickup.SetItem (item, pickupID);
+        return pickup;
+    }
+
+    public static Container SpawnContainer (Vector3 position, Quaternion rotation) {
+        Container container = Instantiate(instance.containerPrefab, position, rotation);
+        return container;
     }
 
     [System.Serializable]

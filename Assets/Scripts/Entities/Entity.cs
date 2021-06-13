@@ -34,7 +34,8 @@ public class Entity : MonoBehaviour {
 
     public int DropItem (int id, int count = 1) {
         int leftoverCount = RemoveItem (id, count);
-        ItemDatabase.SpawnItemPickup (id, count, transform.position);
+        ItemPickup pickup = ItemDatabase.SpawnItemPickup (id, count, transform.position);
+        PacketSender.ItemDropped(pickup);
         return leftoverCount;
     }
 
