@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace GameServer {
     public static class EventHandler {
         private delegate void PacketHandler (Client client, Packet packet);
-        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { 
-            { (int) ClientPackets.VersionCheck, VersionCheck}, 
-            { (int) ClientPackets.Login, Login }, 
-            { (int) ClientPackets.Logout, Logout }, 
-            { (int) ClientPackets.PlayerMoved, PlayerMoved }, 
-            { (int) ClientPackets.ChatMessage, ChatMessage }, 
-            { (int) ClientPackets.PlayerDataRequest, PlayerDataRequest }
+        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
+                (int) ClientPackets.VersionCheck, VersionCheck }, {
+                (int) ClientPackets.Login, Login }, {
+                (int) ClientPackets.Logout, Logout }, {
+                (int) ClientPackets.PlayerMoved, PlayerMoved }, {
+                (int) ClientPackets.ChatMessage, ChatMessage }, {
+                (int) ClientPackets.PlayerDataRequest, PlayerDataRequest }
         };
 
         public static void HandlePacket (Client client, Packet packet) {
@@ -40,7 +41,7 @@ namespace GameServer {
                 } else {
                     PacketSender.LoginDenied (client);
                 }
-            });
+            }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
         private static void Logout (Client client, Packet packet) {

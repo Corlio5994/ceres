@@ -30,7 +30,7 @@ namespace GameServer {
 
             player = (Person) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
             loggedIn = true;
-            Debug.Log ($"[{id}] Logged in");
+            Console.Log ($"[{id}] Logged in");
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace GameServer {
             PacketSender.LogoutSuccessful (this);
             PacketSender.OtherPlayerLoggedOut (this);
 
-            Debug.Log ($"[{id}] Logging out");
+            Console.Log ($"[{id}] Logging out");
             loggedIn = false;
         }
 
@@ -60,7 +60,7 @@ namespace GameServer {
             Logout ();
 
             tcp.Disconnect ();
-            Debug.Log ($"[{id}] Disconnected");
+            Console.Log ($"[{id}] Disconnected");
         }
     }
 }

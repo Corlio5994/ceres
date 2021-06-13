@@ -37,7 +37,6 @@ public static partial class Client {
             id = -1;
 
             TCP.Disconnect ();
-            Debug.Log ($"[Client] Disconnected");
             // TODO: Show a disconnect message
             Application.Quit ();
         }

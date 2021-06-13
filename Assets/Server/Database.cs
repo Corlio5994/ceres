@@ -23,7 +23,7 @@ namespace GameServer {
 
                 return data;
             } catch (Exception exception) {
-                Debug.LogError (exception);
+                Console.LogError (exception);
                 return new ClientDatabaseData ();
             }
         }
@@ -36,7 +36,7 @@ namespace GameServer {
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
                 reference.Child ($"users/{userID}").SetRawJsonValueAsync (json);
             } catch (Exception exception) {
-                Debug.LogError (exception);
+                Console.LogError (exception);
             }
         }
     }
