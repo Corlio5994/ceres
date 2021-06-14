@@ -150,7 +150,14 @@ namespace GameServer {
 
         public static void BankDataRequest (Client client) {
             using (Packet packet = new Packet (ServerPackets.BankData)) {
-                packet.Write (0);
+                Dictionary<int, Inventory> banks = client.banks;
+                packet.Write (banks.Count);
+
+                foreach (KeyValuePair<int, Inventory> bank in banks) {
+                    packet.Write (bank.Key);
+                    packet.Write (bank.Value);
+                }
+
                 SendTCPData (client, packet);
             }
         }

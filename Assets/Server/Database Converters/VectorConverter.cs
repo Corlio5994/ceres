@@ -1,50 +1,103 @@
-using System;
-using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using UnityEngine;
+using Newtonsoft.Json;
+using System;
 
-public class VectorJsonConverter : JsonConverter<Vector3> {
-    public override Vector3 Read (ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException ("Expected StartObject token");
 
-        var result = new Vector3 ();
-
-        while (reader.Read ()) {
-            if (reader.TokenType == JsonTokenType.EndObject)
-                return result;
-
-            if (reader.TokenType != JsonTokenType.PropertyName)
-                throw new JsonException ("Expected PropertyName token");
-
-            var propertyName = reader.GetString ();
-            reader.Read ();
-            float number = reader.GetSingle();
-
-            switch (propertyName) {
-                case "x":
-                    result.x = number;
-                    break;
-                case "y":
-                    result.y = number;
-                    break;
-                case "z":
-                    result.z = number;
-                    break;
-            }
+public class VectorJsonConverter : JsonConverter
+{
+    public override bool CanConvert(Type objectType)
+    {
+        if (objectType == typeof(Vector4))
+        {
+            return true;
         }
-
-        throw new JsonException ("Expected EndObject token");
+        return false;
     }
 
-    public override void Write (Utf8JsonWriter writer, Vector3 vector, JsonSerializerOptions options) {
-        writer.WriteStartObject ();
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var t = serializer.Deserialize(reader);
+        var iv = JsonConvert.DeserializeObject<Vector4>(t.ToString());
+        return iv;
+    }
 
-        writer.WriteNumber ("x", vector.x);
-        writer.WriteNumber ("y", vector.y);
-        writer.WriteNumber ("z", vector.z);
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        Vector4 v = (Vector4)value;
 
-        writer.WriteEndObject ();
+        writer.WriteStartObject();
+        writer.WritePropertyName("x");
+        writer.WriteValue(v.x);
+        writer.WritePropertyName("y");
+        writer.WriteValue(v.y);
+        writer.WritePropertyName("z");
+        writer.WriteValue(v.z);
+        writer.WritePropertyName("w");
+        writer.WriteValue(v.w);
+        writer.WriteEndObject();
+    }
+}
+
+public class Vec3Conv : JsonConverter
+{
+    public override bool CanConvert(Type objectType)
+    {
+        if (objectType == typeof(Vector3))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var t = serializer.Deserialize(reader);
+        var iv = JsonConvert.DeserializeObject<Vector3>(t.ToString());
+        return iv;
+    }
+
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        Vector3 v = (Vector3)value;
+
+        writer.WriteStartObject();
+        writer.WritePropertyName("x");
+        writer.WriteValue(v.x);
+        writer.WritePropertyName("y");
+        writer.WriteValue(v.y);
+        writer.WritePropertyName("z");
+        writer.WriteValue(v.z);
+        writer.WriteEndObject();
+    }
+}
+
+public class Vec2Conv : JsonConverter
+{
+    public override bool CanConvert(Type objectType)
+    {
+        if (objectType == typeof(Vector2))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var t = serializer.Deserialize(reader);
+        var iv = JsonConvert.DeserializeObject<Vector2>(t.ToString());
+        return iv;
+    }
+
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        Vector2 v = (Vector2)value;
+
+        writer.WriteStartObject();
+        writer.WritePropertyName("x");
+        writer.WriteValue(v.x);
+        writer.WritePropertyName("y");
+        writer.WriteValue(v.y);
+        writer.WriteEndObject();
     }
 }

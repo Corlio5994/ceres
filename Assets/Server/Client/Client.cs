@@ -7,11 +7,17 @@ namespace GameServer {
     public class ClientDatabaseData {
         public Vector3 position { get; set; } = Vector3.zero;
         public List<ItemData> items { get; set; } = new List<ItemData> ();
+        public List<BankData> banks { get; set; } = new List<BankData> ();
     }
 
     public class ItemData {
         public int count { get; set; }
         public int id { get; set; }
+    }
+
+    public class BankData {
+        public int id { get; set; }
+        public List<ItemData> items { get; set; } = new List<ItemData>();
     }
 
     public partial class Client {
@@ -21,6 +27,7 @@ namespace GameServer {
         public Firebase.Auth.FirebaseUser user { get; private set; }
 
         public Person player;
+        public Dictionary<int, Inventory> banks = new Dictionary<int, Inventory> ();
 
         public Client (int id) {
             this.id = id;
@@ -42,6 +49,18 @@ namespace GameServer {
             // Load the inventory
             foreach (ItemData itemData in data.items) {
                 player.AddItem (ItemDatabase.GetItem (itemData.id, itemData.count));
+            }
+
+            // Load the Banks
+            foreach (BankData bankData in data.banks) {
+                var newBank = new Inventory (999);
+
+                foreach (ItemData itemData in bankData.items) {
+                    Item item = ItemDatabase.GetItem (itemData.id, itemData.count);
+                    newBank.AddItem (item);
+                }
+
+                banks.Add (bankData.id, newBank);
             }
 
             Console.Log ($"[{id}] Logged in");
@@ -73,7 +92,43 @@ namespace GameServer {
                 data.items.Add (new ItemData { id = item.id, count = item.count });
             }
 
+            // Save the Banks
+            foreach (KeyValuePair<int, Inventory> bank in banks) {
+                var bankData = new BankData { id = bank.Key };
+
+                foreach (Item item in bank.Value.GetSortedItems ()) {
+                    bankData.items.Add (new ItemData { id = item.id, count = item.count });
+                }
+
+                data.banks.Add (bankData);
+            }
+
             return data;
+        }
+
+        // TODO: Move these into a more suitable place
+        // Eventually Client should only control the networking of the user, all logic
+        // should be somewhere else
+        public void BankDeposit (int bankID, int itemID, int count) {
+            if (!banks.ContainsKey (bankID)) {
+                banks.Add (bankID, new Inventory (999));
+            }
+
+            Item item = ItemDatabase.GetItem (itemID, count);
+
+            banks[bankID].AddItem (item);
+            player.RemoveItem (itemID, count);
+        }
+
+        public void BankWithdraw (int bankID, int itemID, int count) {
+            if (!banks.ContainsKey (bankID)) {
+                banks.Add (bankID, new Inventory (999));
+            }
+
+            Item item = ItemDatabase.GetItem (itemID, count);
+
+            banks[bankID].RemoveItem (itemID, count);
+            player.AddItem (item);
         }
 
         public void Disconnect () {

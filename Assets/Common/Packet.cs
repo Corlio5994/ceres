@@ -133,6 +133,7 @@ public class Packet : IDisposable {
     }
 
     public void Write (Inventory inventory) {
+        Write(inventory.maxWeight);
         Write (inventory.itemCount);
         foreach (Item item in inventory.GetSortedItems ()) {
             Write (item);
@@ -264,7 +265,8 @@ public class Packet : IDisposable {
 
     public Inventory ReadInventory (bool moveReadPosition = true) {
         try {
-            var inventory = new Inventory ();
+            float maxWeight = ReadFloat();
+            var inventory = new Inventory (maxWeight);
             int itemCount = ReadInt ();
             for (int i = 0; i < itemCount; i++) {
                 inventory.AddItem (ReadItem ());

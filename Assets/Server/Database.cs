@@ -1,34 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Firebase.Database;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace GameServer {
     public static class Database {
         private static DatabaseReference reference;
         private static string databaseURL = "https://ceres-fcf64-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        private static JsonSerializerOptions options;
+        private static JsonSerializerSettings options;
 
         public static void Start () {
             reference = FirebaseDatabase.GetInstance (FirebaseSetup.app, databaseURL).RootReference;
-            
-            options = new JsonSerializerOptions { };
-            options.Converters.Add(new VectorJsonConverter());
+
+            options = new JsonSerializerSettings { };
+            options.Converters.Add (new VectorJsonConverter ());
+            // options.Converters.Add (new DictionaryJsonConverter ());
         }
 
         public static async Task<ClientDatabaseData> GetUser (string userID) {
             try {
                 DataSnapshot snapshot = await reference.Child ($"users/{userID}").GetValueAsync ();
 
-                ClientDatabaseData data = new ClientDatabaseData ();
                 string json = snapshot.GetRawJsonValue ();
-                // JsonUtility.FromJsonOverwrite(json, data);
-                data = JsonSerializer.Deserialize<ClientDatabaseData>(json, options);
+                Console.Log (json, "blue");
 
-                Console.Log(json, "blue");
+                ClientDatabaseData data = new ClientDatabaseData ();
+                if (json != null)
+                    data = JsonConvert.DeserializeObject<ClientDatabaseData> (json, options);
 
                 return data;
             } catch (Exception exception) {
@@ -39,8 +40,7 @@ namespace GameServer {
 
         public static void WriteUser (string userID, ClientDatabaseData data) {
             try {
-                // string json = JsonUtility.ToJson (data);
-                string json = JsonSerializer.Serialize (data, options);
+                string json = JsonConvert.SerializeObject (data, options);
                 Console.Log (json, "blue");
 
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;

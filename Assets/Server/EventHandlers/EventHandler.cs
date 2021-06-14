@@ -7,43 +7,19 @@ using UnityEngine;
 namespace GameServer {
     public static class EventHandler {
         private delegate void PacketHandler (Client client, Packet packet);
-        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () {
-            {
-            (int) ClientPackets.VersionCheck, VersionCheck
-            }, {
-            (int) ClientPackets.Login,
-            Login
-            }, {
-            (int) ClientPackets.Logout,
-            Logout
-            }, {
-            (int) ClientPackets.PlayerMoved,
-            PlayerMoved
-            }, {
-            (int) ClientPackets.ChatMessage,
-            ChatMessage
-            }, {
-            (int) ClientPackets.PlayerDataRequest,
-            PlayerDataRequest
-            }, {
-            (int) ClientPackets.ItemPickupDataRequest,
-            ItemPickupDataRequest
-            }, {
-            (int) ClientPackets.BankDataRequest,
-            BankDataRequest
-            }, {
-            (int) ClientPackets.ItemDropped,
-            ItemDropped
-            }, {
-            (int) ClientPackets.ItemPickedUp,
-            ItemPickedUp
-            }, {
-            (int) ClientPackets.BankDeposit,
-            BankDeposit
-            }, {
-            (int) ClientPackets.BankWithdraw,
-            BankWithdraw
-            },
+        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
+            (int) ClientPackets.VersionCheck, VersionCheck }, { 
+            (int) ClientPackets.Login, Login }, {
+            (int) ClientPackets.Logout, Logout }, {
+            (int) ClientPackets.PlayerMoved, PlayerMoved }, {
+            (int) ClientPackets.ChatMessage, ChatMessage }, {
+            (int) ClientPackets.PlayerDataRequest, PlayerDataRequest }, {
+            (int) ClientPackets.ItemPickupDataRequest, ItemPickupDataRequest }, {
+            (int) ClientPackets.BankDataRequest, BankDataRequest }, {
+            (int) ClientPackets.ItemDropped, ItemDropped }, {
+            (int) ClientPackets.ItemPickedUp, ItemPickedUp }, {
+            (int) ClientPackets.BankDeposit, BankDeposit }, {
+            (int) ClientPackets.BankWithdraw, BankWithdraw },
         };
 
         public static void HandlePacket (Client client, Packet packet) {
@@ -126,15 +102,13 @@ namespace GameServer {
             int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
-            // TODO: Add to player's bank
-            client.player.RemoveItem (itemID);
+            client.BankDeposit (bankID, itemID, 1);
         }
         private static void BankWithdraw (Client client, Packet packet) {
             int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
-            // TODO: Remove from player's bank
-            client.player.AddItem (ItemDatabase.GetItem (itemID));
+            client.BankWithdraw (bankID, itemID, 1);
         }
 
     }

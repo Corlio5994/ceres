@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Inventory {
     [SerializeField] private List<Item> items = new List<Item> ();
-    [SerializeField] private float maxWeight = 30;
+    public readonly float maxWeight;
     [SerializeField] private float weight = 0;
     public int itemCount { get { return items.Count; } }
 

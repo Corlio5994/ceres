@@ -1,34 +1,66 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System;
 using UnityEngine;
 
 public static class EventHandler {
     private delegate void PacketHandler (Packet packet);
-    private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
-            (int) ServerPackets.ConnectedTCP, ConnectedTCP }, {
-            (int) ServerPackets.VersionAccepted, VersionAccepted }, {
-            (int) ServerPackets.VersionDenied, VersionDenied }, {
-            (int) ServerPackets.LoginAccepted, LoginAccepted }, {
-            (int) ServerPackets.LoginDenied, LoginDenied }, {
-            (int) ServerPackets.LogoutSuccessful, LogoutSuccessful }, {
-            (int) ServerPackets.PlayerData, PlayerData }, {
-            (int) ServerPackets.OtherPlayerLoggedIn, OtherPlayerLoggedIn }, {
-            (int) ServerPackets.OtherPlayerLoggedOut, OtherPlayerLoggedOut }, {
-            (int) ServerPackets.PlayerPosition, PlayerPosition }, {
-            (int) ServerPackets.OtherPlayerMoved, OtherPlayerMoved }, {
-            (int) ServerPackets.ChatMessage, ChatMessage }, {
-            (int) ServerPackets.ItemPickupData, ItemPickupData }, {
-            (int) ServerPackets.BankData, BankData }, {
-            (int) ServerPackets.ItemDropped, ItemDropped }, {
-            (int) ServerPackets.ItemPickedUp, ItemPickedUp }, 
+    private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () {
+        {
+        (int) ServerPackets.ConnectedTCP, ConnectedTCP
+        }, {
+        (int) ServerPackets.VersionAccepted,
+        VersionAccepted
+        }, {
+        (int) ServerPackets.VersionDenied,
+        VersionDenied
+        }, {
+        (int) ServerPackets.LoginAccepted,
+        LoginAccepted
+        }, {
+        (int) ServerPackets.LoginDenied,
+        LoginDenied
+        }, {
+        (int) ServerPackets.LogoutSuccessful,
+        LogoutSuccessful
+        }, {
+        (int) ServerPackets.PlayerData,
+        PlayerData
+        }, {
+        (int) ServerPackets.OtherPlayerLoggedIn,
+        OtherPlayerLoggedIn
+        }, {
+        (int) ServerPackets.OtherPlayerLoggedOut,
+        OtherPlayerLoggedOut
+        }, {
+        (int) ServerPackets.PlayerPosition,
+        PlayerPosition
+        }, {
+        (int) ServerPackets.OtherPlayerMoved,
+        OtherPlayerMoved
+        }, {
+        (int) ServerPackets.ChatMessage,
+        ChatMessage
+        }, {
+        (int) ServerPackets.ItemPickupData,
+        ItemPickupData
+        }, {
+        (int) ServerPackets.BankData,
+        BankData
+        }, {
+        (int) ServerPackets.ItemDropped,
+        ItemDropped
+        }, {
+        (int) ServerPackets.ItemPickedUp,
+        ItemPickedUp
+        },
 
     };
 
     public static void HandlePacket (Packet packet) {
         int packetID = packet.ReadInt ();
-        Console.Log(Enum.GetName(typeof(ServerPackets), packetID), "green");
+        Console.Log (Enum.GetName (typeof (ServerPackets), packetID), "green");
         packetHandlers[packetID] (packet);
     }
 
@@ -42,24 +74,24 @@ public static class EventHandler {
     }
 
     private static void VersionAccepted (Packet packet) {
-        Console.Log($"Version accepted");
+        Console.Log ($"Version accepted");
         MainMenuUI.ShowMainMenuPanel ();
     }
 
     private static void VersionDenied (Packet packet) {
-        Console.Log($"Game outdated");
-        GameManager.Quit();
+        Console.Log ($"Game outdated");
+        GameManager.Quit ();
     }
 
-    private static void LoginAccepted(Packet packet) {
-        Client.Login();
-        GameManager.LoadScene("World");
-        Console.Log($"Logged in");
+    private static void LoginAccepted (Packet packet) {
+        Client.Login ();
+        GameManager.LoadScene ("World");
+        Console.Log ($"Logged in");
     }
 
     private static void PlayerData (Packet packet) {
         Vector3 position = packet.ReadVector ();
-        Player player = (Player)GameManager.SpawnPlayer (position, Quaternion.identity);
+        Player player = (Player) GameManager.SpawnPlayer (position, Quaternion.identity);
 
         int otherClients = packet.ReadInt ();
         for (int i = 0; i < otherClients; i++) {
@@ -69,20 +101,20 @@ public static class EventHandler {
             GameManager.SpawnPlayer (otherClientPosition, otherClientRotation, otherClientID);
         }
 
-        Inventory inventory = packet.ReadInventory();
+        Inventory inventory = packet.ReadInventory ();
         player.inventory = inventory;
     }
 
-    private static void LoginDenied(Packet packet) {
-        Console.Log($"Login failed");
+    private static void LoginDenied (Packet packet) {
+        Console.Log ($"Login failed");
         // TODO: Show error message to user
         MainMenuUI.ShowCredentialsPanel ();
     }
 
-    private static void LogoutSuccessful(Packet packet) {
-        Console.Log($"Logged out");
-        GameManager.Logout();
-        GameManager.LoadScene("Main Menu");
+    private static void LogoutSuccessful (Packet packet) {
+        Console.Log ($"Logged out");
+        GameManager.Logout ();
+        GameManager.LoadScene ("Main Menu");
     }
 
     private static void OtherPlayerLoggedIn (Packet packet) {
@@ -91,8 +123,8 @@ public static class EventHandler {
         int clientID = packet.ReadInt ();
         Vector3 position = packet.ReadVector ();
 
-        GameManager.SpawnPlayer(position, Quaternion.identity, clientID);
-        Console.Log($"Other client connected. ID: {clientID}");
+        GameManager.SpawnPlayer (position, Quaternion.identity, clientID);
+        Console.Log ($"Other client connected. ID: {clientID}");
     }
 
     private static void OtherPlayerLoggedOut (Packet packet) {
@@ -100,8 +132,8 @@ public static class EventHandler {
 
         int clientID = packet.ReadInt ();
 
-        GameManager.DestroyPlayer(clientID);
-        Console.Log($"Other client disconnected. ID: {clientID}");
+        GameManager.DestroyPlayer (clientID);
+        Console.Log ($"Other client disconnected. ID: {clientID}");
     }
 
     private static void PlayerPosition (Packet packet) {
@@ -128,12 +160,12 @@ public static class EventHandler {
         int itemPickupCount = packet.ReadInt ();
 
         for (int i = 0; i < itemPickupCount; i++) {
-            int pickupID = packet.ReadInt();
-            Vector3 position = packet.ReadVector();
-            int itemID = packet.ReadInt();
-            int count = packet.ReadInt();
+            int pickupID = packet.ReadInt ();
+            Vector3 position = packet.ReadVector ();
+            int itemID = packet.ReadInt ();
+            int count = packet.ReadInt ();
 
-            ItemDatabase.SpawnItemPickup(itemID, count, position, pickupID);
+            ItemDatabase.SpawnItemPickup (itemID, count, position, pickupID);
         }
     }
 
@@ -141,25 +173,18 @@ public static class EventHandler {
         int bankCount = packet.ReadInt ();
 
         for (int i = 0; i < bankCount; i++) {
-            int bankID = packet.ReadInt();
-            int bankItemsCount = packet.ReadInt();
-
-            Bank bank = Bank.Get(bankID);
-            for (int j = 0; j < bankItemsCount; j++) {
-                int itemID = packet.ReadInt();
-                int count = packet.ReadInt();
-
-                bank.Deposit(ItemDatabase.GetItem(itemID, count));
-            }
+            int bankID = packet.ReadInt ();
+            Inventory inventory = packet.ReadInventory ();
+            Bank.Get (bankID).SetItems (inventory.GetSortedItems ());
         }
     }
 
     private static void ItemDropped (Packet packet) {
-        int pickupID = packet.ReadInt();
-        Vector3 position = packet.ReadVector();
+        int pickupID = packet.ReadInt ();
+        Vector3 position = packet.ReadVector ();
         int itemID = packet.ReadInt ();
 
-        ItemDatabase.SpawnItemPickup(itemID, 1, position, pickupID);
+        ItemDatabase.SpawnItemPickup (itemID, 1, position, pickupID);
     }
 
     private static void ItemPickedUp (Packet packet) {
