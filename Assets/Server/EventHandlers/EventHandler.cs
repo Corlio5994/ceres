@@ -1,29 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace GameServer {
     public static class EventHandler {
         private delegate void PacketHandler (Client client, Packet packet);
-        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { 
-            { (int) ClientPackets.VersionCheck, VersionCheck}, 
-            { (int) ClientPackets.Login, Login }, 
-            { (int) ClientPackets.Logout, Logout }, 
-            { (int) ClientPackets.PlayerMoved, PlayerMoved }, 
-            { (int) ClientPackets.ChatMessage, ChatMessage }, 
-            { (int) ClientPackets.PlayerDataRequest, PlayerDataRequest },
-            { (int) ClientPackets.ItemPickupDataRequest, ItemPickupDataRequest },
-            { (int) ClientPackets.ContainerDataRequest, ContainerDataRequest },
-            { (int) ClientPackets.ItemDropped, ItemDropped },
-            { (int) ClientPackets.ItemPickedUp, ItemPickedUp },
-            { (int) ClientPackets.ContainerDeposit, ContainerDeposit },
-            { (int) ClientPackets.ContainerWithdraw, ContainerWithdraw },
+        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
+                (int) ClientPackets.VersionCheck, VersionCheck }, {
+                (int) ClientPackets.Login, Login }, {
+                (int) ClientPackets.Logout, Logout }, {
+                (int) ClientPackets.PlayerMoved, PlayerMoved }, {
+                (int) ClientPackets.ChatMessage, ChatMessage }, {
+                (int) ClientPackets.PlayerDataRequest, PlayerDataRequest }, {
+                (int) ClientPackets.ItemPickupDataRequest, ItemPickupDataRequest }, {
+                (int) ClientPackets.ContainerDataRequest, ContainerDataRequest }, {
+                (int) ClientPackets.ItemDropped, ItemDropped }, {
+                (int) ClientPackets.ItemPickedUp, ItemPickedUp }, {
+                (int) ClientPackets.BankDeposit, BankDeposit }, {
+                (int) ClientPackets.BankWithdraw, BankWithdraw },
         };
 
         public static void HandlePacket (Client client, Packet packet) {
             int packetID = packet.ReadInt ();
+            Console.Log(Enum.GetName(typeof(ClientPackets), packetID), "green");
             packetHandlers[packetID] (client, packet);
         }
 
@@ -42,8 +43,8 @@ namespace GameServer {
 
             client.Login (email, password).ContinueWith (task => {
                 if (task.Result) {
-                    PacketSender.LoginAccepted (client);
                     PacketSender.OtherPlayerLoggedIn (client);
+                    PacketSender.LoginAccepted (client);
                 } else {
                     PacketSender.LoginDenied (client);
                 }
@@ -69,25 +70,27 @@ namespace GameServer {
             PacketSender.PlayerData (client);
         }
 
-        private static void ItemPickupDataRequest(Client client, Packet packet)
-        {
-        }
+        private static void ItemPickupDataRequest (Client client, Packet packet) { }
 
-        private static void ContainerDataRequest(Client client, Packet packet)
-        {
+        private static void ContainerDataRequest (Client client, Packet packet) { }
+        private static void ItemDropped (Client client, Packet packet) {
+            int pickupID = packet.ReadInt ();
+            Vector3 position = packet.ReadVector ();
+            int itemID = packet.ReadInt ();
+
+            ItemPickup pickup = ItemDatabase.SpawnItemPickup (itemID, 1, position, pickupID);
+            PacketSender.ItemDropped(client, pickupID, position, itemID);
         }
-        private static void ItemDropped(Client client, Packet packet)
-        {
+        private static void ItemPickedUp (Client client, Packet packet) {
+            int pickupID = packet.ReadInt();
+            int count = packet.ReadInt();
+
+            ItemPickup pickup = ItemPickup.Get(pickupID);
+            pickup.TakeItem(count);
+            PacketSender.ItemPickedUp(client, pickup.id, count);
         }
-        private static void ItemPickedUp(Client client, Packet packet)
-        {
-        }
-        private static void ContainerDeposit(Client client, Packet packet)
-        {
-        }
-        private static void ContainerWithdraw(Client client, Packet packet)
-        {
-        }
+        private static void BankDeposit (Client client, Packet packet) { }
+        private static void BankWithdraw (Client client, Packet packet) { }
 
     }
 }

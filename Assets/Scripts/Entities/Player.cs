@@ -18,12 +18,17 @@ public class Player : Entity {
             if (Physics.Raycast (ray, out hit, Mathf.Infinity, GameManager.interactableMask)) {
                 Interactable newInteractable = hit.collider.GetComponent<Interactable> ();
                 Interact (newInteractable);
-                // TODO: Send to server
+                PacketSender.PlayerMoved (newInteractable.transform.position);
             } else if (Physics.Raycast (ray, out hit, Mathf.Infinity, GameManager.groundMask)) {
                 SetDestination (hit.point);
                 PacketSender.PlayerMoved (hit.point);
             }
         }
 
+    }
+
+    public override void Stop () {
+        base.Stop ();
+        PacketSender.PlayerMoved (transform.position);
     }
 }

@@ -43,7 +43,7 @@ public class Entity : MonoBehaviour {
         agent.SetDestination (destination);
     }
 
-    public void Stop () {
+    public virtual void Stop () {
         SetDestination (transform.position);
     }
 

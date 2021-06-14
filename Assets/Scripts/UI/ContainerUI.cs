@@ -172,7 +172,7 @@ public class ContainerUI : MonoBehaviour {
             CreateItemButton (deposited, instance.containerItemsParent, false, containerItemsDisplays);
         }
 
-        PacketSender.ContainerDeposit (container, deposited);
+        PacketSender.BankDeposit (container, deposited);
     }
 
     public void Withdraw () {
@@ -201,6 +201,6 @@ public class ContainerUI : MonoBehaviour {
             CreateItemButton (withdrawn, instance.playerItemsParent, true, playerItemsDisplays);
         }
 
-        PacketSender.ContainerWithdraw (container, withdrawn);
+        PacketSender.BankWithdraw (container, withdrawn);
     }
 }

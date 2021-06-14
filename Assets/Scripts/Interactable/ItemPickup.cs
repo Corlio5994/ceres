@@ -23,6 +23,7 @@ public class ItemPickup : Interactable {
                 return;
             }
         }
+        pickups.Add (id, this);
     }
 
     public static ItemPickup Get (int pickupID) {
@@ -31,24 +32,30 @@ public class ItemPickup : Interactable {
 
     public void TakeItem (int count) {
         item.count -= count;
-        if (item.count <= 0)
+        if (item.count <= 0) {
+            pickups.Remove (id);
             Destroy (gameObject);
+        }
     }
 
-    public void SetItem (Item item, int pickupID) {
+    public void SetItem (Item item, int pickupID = -1) {
         if (pickupID == -1) pickupID = pickups.Count;
-        pickups[pickupID] = this;
+        id = pickupID;
 
         this.item = item;
         CheckSurroundingPickups ();
     }
 
     public override void Interact (Entity entity) {
+        int count = item.count;
         item = entity.AddItem (item);
-        if (item == null) Destroy (gameObject);
+        if (entity == Player.instance)
+            PacketSender.ItemPickedUp (this, item == null ? count : count - item.count);
 
-        if (entity.GetType ().IsSubclassOf (typeof (Player)))
-            PacketSender.ItemPickedUp (this);
+        if (item == null) {
+            pickups.Remove (id);
+            Destroy (gameObject);
+        }
     }
 
     protected override void OnMouseOver () {

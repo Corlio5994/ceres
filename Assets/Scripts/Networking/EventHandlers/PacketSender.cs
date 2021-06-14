@@ -10,14 +10,14 @@ public static class PacketSender {
 
     #region Packets
     public static void VersionCheck () {
-        using (Packet packet = new Packet ((int) ClientPackets.VersionCheck)) {
+        using (Packet packet = new Packet (ClientPackets.VersionCheck)) {
             packet.Write (Constants.version);
             SendTCPData (packet);
         }
     }
 
     public static void Login (string username, string password) {
-        using (Packet packet = new Packet ((int) ClientPackets.Login)) {
+        using (Packet packet = new Packet (ClientPackets.Login)) {
             packet.Write (username);
             packet.Write (password); // TODO: Encrypt the password
 
@@ -26,68 +26,70 @@ public static class PacketSender {
     }
 
     public static void Logout () {
-        using (Packet packet = new Packet ((int) ClientPackets.Logout)) {
+        using (Packet packet = new Packet (ClientPackets.Logout)) {
             SendTCPData (packet);
         }
     }
 
-    public static void PlayerMoved (Vector3 destination, bool queued = false) {
-        using (Packet packet = new Packet ((int) ClientPackets.PlayerMoved)) {
+    public static void PlayerMoved (Vector3 destination) {
+        using (Packet packet = new Packet (ClientPackets.PlayerMoved)) {
             packet.Write (destination);
             SendTCPData (packet);
         }
     }
 
     public static void ChatMessage (string message) {
-        using (Packet packet = new Packet ((int) ClientPackets.ChatMessage)) {
+        using (Packet packet = new Packet (ClientPackets.ChatMessage)) {
             packet.Write (message);
             SendTCPData (packet);
         }
     }
 
     public static void PlayerDataRequest () {
-        using (Packet packet = new Packet ((int) ClientPackets.PlayerDataRequest)) {
+        using (Packet packet = new Packet (ClientPackets.PlayerDataRequest)) {
             SendTCPData (packet);
         }
     }
 
     public static void ItemPickupDataRequest () {
-        using (Packet packet = new Packet ((int) ClientPackets.ItemPickupDataRequest)) {
+        using (Packet packet = new Packet (ClientPackets.ItemPickupDataRequest)) {
             SendTCPData (packet);
         }
     }
 
     public static void ContainerDataRequest () {
-        using (Packet packet = new Packet ((int) ClientPackets.ContainerDataRequest)) {
+        using (Packet packet = new Packet (ClientPackets.ContainerDataRequest)) {
             SendTCPData (packet);
         }
     }
 
     public static void ItemDropped (ItemPickup pickup) {
-        using (Packet packet = new Packet ((int) ClientPackets.ItemDropped)) {
+        using (Packet packet = new Packet (ClientPackets.ItemDropped)) {
             packet.Write (pickup.id);
+            packet.Write (pickup.transform.position);
             packet.Write (pickup.item.id);
             SendTCPData (packet);
         }
     }
 
-    public static void ItemPickedUp (ItemPickup pickup) {
-        using (Packet packet = new Packet ((int) ClientPackets.ItemPickedUp)) {
+    public static void ItemPickedUp (ItemPickup pickup, int count) {
+        using (Packet packet = new Packet (ClientPackets.ItemPickedUp)) {
             packet.Write (pickup.id);
+            packet.Write (count);
             SendTCPData (packet);
         }
     }
 
-    public static void ContainerDeposit (Container container, Item item) {
-        using (Packet packet = new Packet ((int) ClientPackets.ContainerDeposit)) {
+    public static void BankDeposit (Container container, Item item) {
+        using (Packet packet = new Packet (ClientPackets.BankDeposit)) {
             packet.Write (container.id);
             packet.Write (item.id);
             SendTCPData (packet);
         }
     }
 
-    public static void ContainerWithdraw (Container container, Item item) {
-        using (Packet packet = new Packet ((int) ClientPackets.ContainerWithdraw)) {
+    public static void BankWithdraw (Container container, Item item) {
+        using (Packet packet = new Packet (ClientPackets.BankWithdraw)) {
             packet.Write (container.id);
             packet.Write (item.id);
             SendTCPData (packet);

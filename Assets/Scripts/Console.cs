@@ -36,7 +36,8 @@ public class Console : MonoBehaviour {
         } else if (Input.GetKeyDown (KeyCode.F1)) {
             Show ();
         }
-
+    }
+    void FixedUpdate () {
         if (queuedMessages.Count > 0) {
             string[] newMessages;
             lock (queuedMessages) {

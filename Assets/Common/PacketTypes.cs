@@ -14,11 +14,9 @@ public enum ServerPackets {
     ChatMessage,
 
     ItemPickupData,
-    ContainerData,
+    BankData,
     ItemDropped,
-    ItemPickedUp,
-    ContainerDeposit,
-    ContainerWithdraw
+    ItemPickedUp
 }
 
 public enum ClientPackets {
@@ -34,6 +32,6 @@ public enum ClientPackets {
     ContainerDataRequest,
     ItemDropped,
     ItemPickedUp,
-    ContainerDeposit,
-    ContainerWithdraw
+    BankDeposit,
+    BankWithdraw
 }

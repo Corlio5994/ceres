@@ -29,8 +29,14 @@ public class Packet : IDisposable {
 
     public Packet () { }
 
-    public Packet (int id) {
-        Write (id);
+    public Packet (ClientPackets id) {
+        Console.Log (Enum.GetName (typeof (ClientPackets), id), "purple");
+        Write ((int) id);
+    }
+
+    public Packet (ServerPackets id) {
+        Console.Log (Enum.GetName (typeof (ServerPackets), id), "purple");
+        Write ((int) id);
     }
 
     public Packet (byte[] data) {
@@ -109,16 +115,16 @@ public class Packet : IDisposable {
     }
 
     public void Write (Vector3 value) {
-        Write(value.x);
-        Write(value.y);
-        Write(value.z);
+        Write (value.x);
+        Write (value.y);
+        Write (value.z);
     }
 
     public void Write (Quaternion value) {
-        Write(value.x);
-        Write(value.y);
-        Write(value.z);
-        Write(value.w);
+        Write (value.x);
+        Write (value.y);
+        Write (value.z);
+        Write (value.w);
     }
     #endregion
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System;
 using UnityEngine;
 
 public static class EventHandler {
@@ -19,16 +20,15 @@ public static class EventHandler {
             (int) ServerPackets.OtherPlayerMoved, OtherPlayerMoved }, {
             (int) ServerPackets.ChatMessage, ChatMessage }, {
             (int) ServerPackets.ItemPickupData, ItemPickupData }, {
-            (int) ServerPackets.ContainerData, ContainerData }, {
+            (int) ServerPackets.BankData, BankData }, {
             (int) ServerPackets.ItemDropped, ItemDropped }, {
-            (int) ServerPackets.ItemPickedUp, ItemPickedUp }, {
-            (int) ServerPackets.ContainerDeposit, ContainerDeposit }, {
-            (int) ServerPackets.ContainerWithdraw, ContainerWithdraw },
+            (int) ServerPackets.ItemPickedUp, ItemPickedUp }, 
 
     };
 
     public static void HandlePacket (Packet packet) {
         int packetID = packet.ReadInt ();
+        Console.Log(Enum.GetName(typeof(ServerPackets), packetID), "green");
         packetHandlers[packetID] (packet);
     }
 
@@ -125,15 +125,16 @@ public static class EventHandler {
         int itemPickupCount = packet.ReadInt ();
 
         for (int i = 0; i < itemPickupCount; i++) {
+            int pickupID = packet.ReadInt();
+            Vector3 position = packet.ReadVector();
             int itemID = packet.ReadInt();
             int count = packet.ReadInt();
-            Vector3 position = packet.ReadVector();
 
-            ItemDatabase.SpawnItemPickup(itemID, count, position);
+            ItemDatabase.SpawnItemPickup(itemID, count, position, pickupID);
         }
     }
 
-    private static void ContainerData (Packet packet) {
+    private static void BankData (Packet packet) {
         int containerCount = packet.ReadInt ();
 
         for (int i = 0; i < containerCount; i++) {
@@ -164,31 +165,9 @@ public static class EventHandler {
     }
 
     private static void ItemPickedUp (Packet packet) {
-        int itemPickupID = packet.ReadInt ();
+        int pickupID = packet.ReadInt ();
         int count = packet.ReadInt ();
 
-        ItemPickup.Get (itemPickupID).TakeItem (count);
-    }
-
-    private static void ContainerDeposit (Packet packet) {
-        int containerID = packet.ReadInt ();
-        int itemID = packet.ReadInt ();
-
-        Container container = Container.Get(containerID);
-        container.Deposit (ItemDatabase.GetItem (itemID));
-        if (ContainerUI.container == container) {
-            ContainerUI.Show(container, false);
-        }
-    }
-
-    private static void ContainerWithdraw (Packet packet) {
-        int containerID = packet.ReadInt ();
-        int itemID = packet.ReadInt ();
-
-        Container container = Container.Get(containerID);
-        container.Withdraw (itemID);
-        if (ContainerUI.container == container) {
-            ContainerUI.Show(container, false);
-        }
+        ItemPickup.Get (pickupID).TakeItem (count);
     }
 }
