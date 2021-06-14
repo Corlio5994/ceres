@@ -138,24 +138,19 @@ public static class EventHandler {
     }
 
     private static void BankData (Packet packet) {
-        int containerCount = packet.ReadInt ();
+        int bankCount = packet.ReadInt ();
 
-        for (int i = 0; i < containerCount; i++) {
-            int containerID = packet.ReadInt();
-            int containerItemsCount = packet.ReadInt();
-            Vector3 position = packet.ReadVector();
-            Quaternion rotation = packet.ReadQuaternion();
+        for (int i = 0; i < bankCount; i++) {
+            int bankID = packet.ReadInt();
+            int bankItemsCount = packet.ReadInt();
 
-            Container container = Container.Get(containerID);
-            if (container == null) 
-                container = ItemDatabase.SpawnContainer(position, rotation);
-            for (int j = 0; j < containerItemsCount; j++) {
+            Bank bank = Bank.Get(bankID);
+            for (int j = 0; j < bankItemsCount; j++) {
                 int itemID = packet.ReadInt();
                 int count = packet.ReadInt();
 
-                container.inventory.AddItem(ItemDatabase.GetItem(itemID, count));
+                bank.Deposit(ItemDatabase.GetItem(itemID, count));
             }
-            
         }
     }
 

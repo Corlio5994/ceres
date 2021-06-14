@@ -37,6 +37,10 @@ public class Inventory {
         }
     }
 
+    public void SetItems (List<Item> items) {
+        this.items = items;
+    }
+
     public List<Item> GetSortedItems () {
         return items.OrderBy (item => item.name).ToList ();
     }

@@ -2839,8 +2839,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _smoothTime: 0.5
   _moveSpeed: 10
-  _minimumZoom: 9
-  _maximumZoom: 25
+  _minimumZoom: 5
+  _maximumZoom: 13
   _zoomSpeed: 0.25
 --- !u!1 &693939663
 GameObject:
@@ -5178,8 +5178,8 @@ MonoBehaviour:
   itemWeight: {fileID: 825817509}
   itemCount: {fileID: 1131912708}
   itemDescription: {fileID: 1271847672}
-  textColour: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
-  selectedColour: {r: 1, g: 0.709346, b: 0.08962262, a: 1}
+  textColour: {r: 1, g: 1, b: 1, a: 1}
+  selectedColour: {r: 1, g: 0.8666667, b: 0.27058825, a: 1}
 --- !u!1 &1332527662
 GameObject:
   m_ObjectHideFlags: 0
@@ -6101,8 +6101,8 @@ MonoBehaviour:
   itemWeight: {fileID: 1614166534}
   itemCount: {fileID: 851621997}
   itemDescription: {fileID: 318152646}
-  textColour: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
-  selectedColour: {r: 1, g: 0.70980394, b: 0.09019608, a: 1}
+  textColour: {r: 1, g: 1, b: 1, a: 1}
+  selectedColour: {r: 1, g: 0.86821246, b: 0.2688679, a: 1}
 --- !u!1 &1542135407
 GameObject:
   m_ObjectHideFlags: 0
@@ -7675,8 +7675,8 @@ MonoBehaviour:
   tooltipTitleText: {fileID: 961683144}
   subtitleText: {fileID: 415460711}
   descriptionText: {fileID: 1196969889}
-  screenPadding: {x: 100, y: 100}
-  spacing: 20
+  screenPadding: {x: 50, y: 50}
+  spacing: 10
 --- !u!1 &1946532171
 GameObject:
   m_ObjectHideFlags: 0
@@ -8150,13 +8150,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rarityColours:
-  - {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
+  - {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0.13181043, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.77448, b: 0, a: 1}
+  - {r: 0.40381765, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.92387027, b: 0, a: 1}
   textAssetPath: items
   itemPickupPrefab: {fileID: 7343645889143702492, guid: 6a69ff5639fb0cf42aacc5d73c821815, type: 3}
-  containerPrefab: {fileID: 0}
 --- !u!4 &1999200523
 Transform:
   m_ObjectHideFlags: 0
@@ -8503,8 +8502,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2086930830}
   - component: {fileID: 2086930827}
-  - component: {fileID: 2086930826}
   - component: {fileID: 2086930831}
+  - component: {fileID: 2086930826}
   m_Layer: 7
   m_Name: Chest
   m_TagString: Untagged
@@ -8521,10 +8520,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2086930825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 256102856bc4de24eb75fa370728402e, type: 3}
+  m_Script: {fileID: 11500000, guid: 49dc91e68c91e464fa5acd04aa500d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1746287652}
+  id: 0
 --- !u!65 &2086930827
 BoxCollider:
   m_ObjectHideFlags: 0

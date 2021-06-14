@@ -57,8 +57,8 @@ public static class PacketSender {
         }
     }
 
-    public static void ContainerDataRequest () {
-        using (Packet packet = new Packet (ClientPackets.ContainerDataRequest)) {
+    public static void BankDataRequest () {
+        using (Packet packet = new Packet (ClientPackets.BankDataRequest)) {
             SendTCPData (packet);
         }
     }
@@ -80,15 +80,17 @@ public static class PacketSender {
         }
     }
 
-    public static void BankDeposit (Container container, Item item) {
+    public static void BankDeposit (Bank bank, Item item) {
         using (Packet packet = new Packet (ClientPackets.BankDeposit)) {
+            packet.Write (bank.id);
             packet.Write (item.id);
             SendTCPData (packet);
         }
     }
 
-    public static void BankWithdraw (Container container, Item item) {
+    public static void BankWithdraw (Bank bank, Item item) {
         using (Packet packet = new Packet (ClientPackets.BankWithdraw)) {
+            packet.Write (bank.id);
             packet.Write (item.id);
             SendTCPData (packet);
         }

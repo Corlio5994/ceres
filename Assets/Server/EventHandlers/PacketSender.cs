@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameServer {
@@ -73,7 +74,7 @@ namespace GameServer {
                     packet.Write (otherClient.player.transform.rotation);
                 }
 
-                packet.Write(player.inventory);
+                packet.Write (player.inventory);
 
                 SendTCPData (client, packet);
             }
@@ -133,15 +134,24 @@ namespace GameServer {
         #region Items
         public static void ItemPickupData (Client client) {
             using (Packet packet = new Packet (ServerPackets.ItemPickupData)) {
-                packet.Write (client.id);
-                BroadcastLoggedIn (packet, client);
+                List<ItemPickup> pickups = ItemPickup.GetAllPickups ();
+                packet.Write (pickups.Count);
+
+                foreach (ItemPickup pickup in pickups) {
+                    packet.Write (pickup.id);
+                    packet.Write (pickup.transform.position);
+                    packet.Write (pickup.item.id);
+                    packet.Write (pickup.item.count);
+                }
+
+                SendTCPData (client, packet);
             }
         }
 
-        public static void BankData (Client client) {
+        public static void BankDataRequest (Client client) {
             using (Packet packet = new Packet (ServerPackets.BankData)) {
-                packet.Write (client.id);
-                BroadcastLoggedIn (packet, client);
+                packet.Write (0);
+                SendTCPData (client, packet);
             }
         }
 

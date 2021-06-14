@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ItemPickup : Interactable {
     private static int itemDespawnTime = 300;
@@ -28,6 +29,10 @@ public class ItemPickup : Interactable {
 
     public static ItemPickup Get (int pickupID) {
         return pickups[pickupID];
+    }
+
+    public static List<ItemPickup> GetAllPickups () {
+        return pickups.Values.ToList();
     }
 
     public void TakeItem (int count) {

@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
         } else if (Client.connected) {
             PacketSender.PlayerDataRequest ();
             PacketSender.ItemPickupDataRequest();
-            PacketSender.ContainerDataRequest();
+            PacketSender.BankDataRequest();
         } else {
             GameServer.Server.Start ();
 

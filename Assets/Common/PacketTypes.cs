@@ -29,7 +29,7 @@ public enum ClientPackets {
     ChatMessage,
     
     ItemPickupDataRequest,
-    ContainerDataRequest,
+    BankDataRequest,
     ItemDropped,
     ItemPickedUp,
     BankDeposit,

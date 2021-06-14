@@ -83,12 +83,11 @@ public class ContainerUI : MonoBehaviour {
     public static void CreateItemButton (Item item, Transform parent, bool deposit, Dictionary<int, TMP_Text> data) {
         TMP_Text text = Instantiate (instance.itemPrefab, Vector3.zero, Quaternion.identity, parent);
 
-
         text.text = $"{item.count}x {item.name}";
         for (int i = 0; i < parent.childCount; i++) {
-            TMP_Text otherText = parent.GetChild(i).GetComponent<TMP_Text>();
-            if (string.Compare(text.text, otherText.text) < 0) {
-                text.transform.SetSiblingIndex(i);
+            TMP_Text otherText = parent.GetChild (i).GetComponent<TMP_Text> ();
+            if (string.Compare (text.text, otherText.text) < 0) {
+                text.transform.SetSiblingIndex (i);
             }
         }
 
@@ -172,7 +171,8 @@ public class ContainerUI : MonoBehaviour {
             CreateItemButton (deposited, instance.containerItemsParent, false, containerItemsDisplays);
         }
 
-        PacketSender.BankDeposit (container, deposited);
+        if (container as Bank != null)
+            PacketSender.BankDeposit ((Bank) container, deposited);
     }
 
     public void Withdraw () {
@@ -201,6 +201,7 @@ public class ContainerUI : MonoBehaviour {
             CreateItemButton (withdrawn, instance.playerItemsParent, true, playerItemsDisplays);
         }
 
-        PacketSender.BankWithdraw (container, withdrawn);
+        if (container as Bank != null)
+            PacketSender.BankWithdraw ((Bank) container, withdrawn);
     }
 }

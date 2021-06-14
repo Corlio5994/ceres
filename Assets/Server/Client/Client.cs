@@ -5,14 +5,13 @@ using UnityEngine;
 
 namespace GameServer {
     public class ClientDatabaseData {
-        public Vector3 position = Vector3.zero;
-        public List<ItemData> items = new List<ItemData> ();
+        public Vector3 position { get; set; } = Vector3.zero;
+        public List<ItemData> items { get; set; } = new List<ItemData> ();
     }
 
-    [Serializable]
     public class ItemData {
-        public int id = -1;
-        public int count = 0;
+        public int count { get; set; }
+        public int id { get; set; }
     }
 
     public partial class Client {
@@ -42,8 +41,7 @@ namespace GameServer {
 
             // Load the inventory
             foreach (ItemData itemData in data.items) {
-                Item item = ItemDatabase.GetItem (itemData.id, itemData.count);
-                player.AddItem (item);
+                player.AddItem (ItemDatabase.GetItem (itemData.id, itemData.count));
             }
 
             Console.Log ($"[{id}] Logged in");

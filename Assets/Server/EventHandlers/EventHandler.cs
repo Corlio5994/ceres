@@ -29,8 +29,8 @@ namespace GameServer {
             (int) ClientPackets.ItemPickupDataRequest,
             ItemPickupDataRequest
             }, {
-            (int) ClientPackets.ContainerDataRequest,
-            ContainerDataRequest
+            (int) ClientPackets.BankDataRequest,
+            BankDataRequest
             }, {
             (int) ClientPackets.ItemDropped,
             ItemDropped
@@ -94,9 +94,13 @@ namespace GameServer {
             PacketSender.PlayerData (client);
         }
 
-        private static void ItemPickupDataRequest (Client client, Packet packet) { }
+        private static void ItemPickupDataRequest (Client client, Packet packet) {
+            PacketSender.ItemPickupData(client);
+        }
 
-        private static void ContainerDataRequest (Client client, Packet packet) { }
+        private static void BankDataRequest (Client client, Packet packet) { 
+            PacketSender.BankDataRequest(client);
+        }
         private static void ItemDropped (Client client, Packet packet) {
             int pickupID = packet.ReadInt ();
             Vector3 position = packet.ReadVector ();
@@ -119,13 +123,17 @@ namespace GameServer {
             PacketSender.ItemPickedUp (client, pickup.id, count);
         }
         private static void BankDeposit (Client client, Packet packet) {
+            int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
+            // TODO: Add to player's bank
             client.player.RemoveItem (itemID);
         }
         private static void BankWithdraw (Client client, Packet packet) {
+            int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
+            // TODO: Remove from player's bank
             client.player.AddItem (ItemDatabase.GetItem (itemID));
         }
 

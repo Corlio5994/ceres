@@ -11,7 +11,6 @@ public class ItemDatabase : MonoBehaviour {
     [SerializeField] public Color[] _rarityColours;
     [SerializeField] private string textAssetPath;
     [SerializeField] private ItemPickup itemPickupPrefab;
-    [SerializeField] private Container containerPrefab;
 
     void Awake () {
         instance = this;
@@ -44,11 +43,6 @@ public class ItemDatabase : MonoBehaviour {
         Item item = GetItem (id, count);
         pickup.SetItem (item, pickupID);
         return pickup;
-    }
-
-    public static Container SpawnContainer (Vector3 position, Quaternion rotation) {
-        Container container = Instantiate(instance.containerPrefab, position, rotation);
-        return container;
     }
 
     [System.Serializable]
