@@ -82,7 +82,6 @@ public static class PacketSender {
 
     public static void BankDeposit (Container container, Item item) {
         using (Packet packet = new Packet (ClientPackets.BankDeposit)) {
-            packet.Write (container.id);
             packet.Write (item.id);
             SendTCPData (packet);
         }
@@ -90,7 +89,6 @@ public static class PacketSender {
 
     public static void BankWithdraw (Container container, Item item) {
         using (Packet packet = new Packet (ClientPackets.BankWithdraw)) {
-            packet.Write (container.id);
             packet.Write (item.id);
             SendTCPData (packet);
         }

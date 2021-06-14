@@ -61,7 +61,8 @@ namespace GameServer {
 
         public static void PlayerData (Client client) {
             using (Packet packet = new Packet (ServerPackets.PlayerData)) {
-                packet.Write (client.player.transform.position);
+                Person player = client.player;
+                packet.Write (player.transform.position);
 
                 Client[] otherPlayers = Server.GetOtherClients (client);
                 packet.Write (otherPlayers.Length);
@@ -71,6 +72,8 @@ namespace GameServer {
                     packet.Write (otherClient.player.transform.position);
                     packet.Write (otherClient.player.transform.rotation);
                 }
+
+                packet.Write(player.inventory);
 
                 SendTCPData (client, packet);
             }

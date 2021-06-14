@@ -126,6 +126,18 @@ public class Packet : IDisposable {
         Write (value.z);
         Write (value.w);
     }
+
+    public void Write (Item item) {
+        Write (item.id);
+        Write (item.count);
+    }
+
+    public void Write (Inventory inventory) {
+        Write (inventory.itemCount);
+        foreach (Item item in inventory.GetSortedItems ()) {
+            Write (item);
+        }
+    }
     #endregion
 
     #region Read
@@ -239,6 +251,27 @@ public class Packet : IDisposable {
             return new Quaternion (ReadFloat (), ReadFloat (), ReadFloat (), ReadFloat ());
         } catch {
             throw new Exception ("Could not read value of type 'Quaternion'!");
+        }
+    }
+
+    public Item ReadItem (bool moveReadPosition = true) {
+        try {
+            return ItemDatabase.GetItem (ReadInt (), ReadInt ());
+        } catch {
+            throw new Exception ("Could not read value of type 'Item'!");
+        }
+    }
+
+    public Inventory ReadInventory (bool moveReadPosition = true) {
+        try {
+            var inventory = new Inventory ();
+            int itemCount = ReadInt ();
+            for (int i = 0; i < itemCount; i++) {
+                inventory.AddItem (ReadItem ());
+            }
+            return inventory;
+        } catch {
+            throw new Exception ("Could not read value of type 'Inventory'!");
         }
     }
     #endregion

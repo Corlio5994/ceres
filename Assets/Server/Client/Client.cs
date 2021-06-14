@@ -1,10 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GameServer {
     public class ClientDatabaseData {
         public Vector3 position = Vector3.zero;
+        public List<ItemData> items = new List<ItemData> ();
+    }
+
+    [Serializable]
+    public class ItemData {
+        public int id = -1;
+        public int count = 0;
     }
 
     public partial class Client {
@@ -28,8 +36,16 @@ namespace GameServer {
 
             ClientDatabaseData data = await Database.GetUser (user.UserId);
 
+            // Spawn the player
             player = (Person) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
             loggedIn = true;
+
+            // Load the inventory
+            foreach (ItemData itemData in data.items) {
+                Item item = ItemDatabase.GetItem (itemData.id, itemData.count);
+                player.AddItem (item);
+            }
+
             Console.Log ($"[{id}] Logged in");
             return true;
         }
@@ -51,7 +67,13 @@ namespace GameServer {
         private ClientDatabaseData GetWriteableData () {
             ClientDatabaseData data = new ClientDatabaseData ();
 
+            // Save position
             data.position = player.transform.position;
+
+            // Save the Inventory
+            foreach (Item item in player.inventory.GetSortedItems ()) {
+                data.items.Add (new ItemData { id = item.id, count = item.count });
+            }
 
             return data;
         }

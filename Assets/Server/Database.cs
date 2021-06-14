@@ -19,7 +19,8 @@ namespace GameServer {
                 DataSnapshot snapshot = await reference.Child ($"users/{userID}").GetValueAsync ();
 
                 ClientDatabaseData data = new ClientDatabaseData ();
-                JsonUtility.FromJsonOverwrite(snapshot.GetRawJsonValue(), data);
+                string json = snapshot.GetRawJsonValue();
+                JsonUtility.FromJsonOverwrite(json, data);
 
                 return data;
             } catch (Exception exception) {
@@ -30,7 +31,6 @@ namespace GameServer {
 
         public static void WriteUser (string userID, ClientDatabaseData data) {
             try {
-                Dictionary<string, object> updates = new Dictionary<string, object> ();
                 string json = JsonUtility.ToJson (data);
 
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;

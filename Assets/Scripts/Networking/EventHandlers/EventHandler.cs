@@ -59,7 +59,7 @@ public static class EventHandler {
 
     private static void PlayerData (Packet packet) {
         Vector3 position = packet.ReadVector ();
-        GameManager.SpawnPlayer (position, Quaternion.identity);
+        Player player = (Player)GameManager.SpawnPlayer (position, Quaternion.identity);
 
         int otherClients = packet.ReadInt ();
         for (int i = 0; i < otherClients; i++) {
@@ -68,6 +68,9 @@ public static class EventHandler {
             Quaternion otherClientRotation = packet.ReadQuaternion ();
             GameManager.SpawnPlayer (otherClientPosition, otherClientRotation, otherClientID);
         }
+
+        Inventory inventory = packet.ReadInventory();
+        player.inventory = inventory;
     }
 
     private static void LoginDenied(Packet packet) {
