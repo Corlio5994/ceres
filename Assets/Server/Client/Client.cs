@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -52,6 +53,7 @@ namespace GameServer {
             }
 
             // Load the Banks
+            banks = new Dictionary<int, Inventory>();
             foreach (BankData bankData in data.banks) {
                 var newBank = new Inventory (999);
 
@@ -139,3 +141,4 @@ namespace GameServer {
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -182,3 +183,4 @@ namespace GameServer {
         }
     }
 }
+#endif

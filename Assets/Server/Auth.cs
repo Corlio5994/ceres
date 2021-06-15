@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,3 +23,4 @@ namespace GameServer {
         }
     }
 }
+#endif

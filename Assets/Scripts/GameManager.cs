@@ -32,10 +32,12 @@ public class GameManager : MonoBehaviour {
             PacketSender.ItemPickupDataRequest();
             PacketSender.BankDataRequest();
         } else {
+            #if UNITY_SERVER || UNITY_EDITOR
             GameServer.Server.Start ();
 
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = Constants.ticksPerSecond;
+            #endif
         }
     }
 
@@ -78,9 +80,11 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnApplicationQuit () {
+        #if UNITY_SERVER || UNITY_EDITOR
         if (StateManager.server) {
             GameServer.Server.Stop ();
         }
+        #endif
     }
 
     public static void Quit () {

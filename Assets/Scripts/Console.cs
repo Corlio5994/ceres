@@ -7,13 +7,16 @@ public class Console : MonoBehaviour {
     public static bool shown { get; private set; }
     static Console instance;
     static List<string> queuedMessages = new List<string> ();
+    static List<string> previousMessages = new List<string> ();
 
     [SerializeField] GameObject content;
     [SerializeField] RectTransform messagesParent;
     [SerializeField] TMP_Text textPrefab;
 
     public static void Clear () {
-        instance.textPrefab.text = "";
+        foreach (Transform transform in instance.messagesParent) {
+            Destroy (transform);
+        }
     }
 
     public static void Show () {
@@ -50,16 +53,18 @@ public class Console : MonoBehaviour {
         if (instance != null) {
             Destroy (gameObject);
             return;
+        } else {
+
         }
 
         instance = this;
-        Hide ();
+        if (shown) Show ();
+        else Hide ();
     }
-
     void Start () {
-        Clear ();
-        Log ("Initialising Console...");
-        Log ($"Game Version: {Constants.version}", "orange");
+        foreach (string message in previousMessages) {
+            AddMessage (message);
+        }
     }
 
     void Update () {
@@ -71,7 +76,7 @@ public class Console : MonoBehaviour {
             Show ();
         }
     }
-    
+
     void FixedUpdate () {
         if (queuedMessages.Count > 0) {
             string[] newMessages;
@@ -81,6 +86,7 @@ public class Console : MonoBehaviour {
             }
             foreach (string message in newMessages) {
                 AddMessage (message);
+                previousMessages.Add (message);
             }
         }
     }

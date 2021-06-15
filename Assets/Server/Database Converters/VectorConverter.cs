@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using UnityEngine;
 using Newtonsoft.Json;
 using System;
@@ -35,3 +36,4 @@ public class VectorJsonConverter : JsonConverter
         writer.WriteEndObject();
     }
 }
+#endif

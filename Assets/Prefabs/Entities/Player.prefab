@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5039577103643357774}
   - component: {fileID: -3672875948050037959}
   - component: {fileID: 6668373693143077765}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,5 +133,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory:
     items: []
-    maxWeight: 30
     weight: 0

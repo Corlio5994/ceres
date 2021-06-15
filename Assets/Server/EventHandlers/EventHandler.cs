@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -113,3 +114,4 @@ namespace GameServer {
 
     }
 }
+#endif
