@@ -46,7 +46,7 @@ public class ContainerUI : MonoBehaviour {
         if (reset)
             currentItemText = null;
 
-        List<Item> playerItems = Player.instance.inventory.GetSortedItems ();
+        List<Item> playerItems = GameManager.mainPlayer.inventory.GetSortedItems ();
         foreach (Item item in playerItems) {
             CreateItemButton (item, instance.playerItemsParent, true, playerItemsDisplays);
         }
@@ -87,8 +87,8 @@ public class ContainerUI : MonoBehaviour {
     }
 
     public static void ShowAnyItem () {
-        if (Player.instance.inventory.itemCount > 0) {
-            ShowItem (Player.instance.inventory.GetSortedItems () [0], true);
+        if (GameManager.mainPlayer.inventory.itemCount > 0) {
+            ShowItem (GameManager.mainPlayer.inventory.GetSortedItems () [0], true);
         } else if (container.inventory.itemCount > 0) {
             ShowItem (container.inventory.GetSortedItems () [0], false);
         } else {
@@ -136,7 +136,7 @@ public class ContainerUI : MonoBehaviour {
 
         int id = selectedItem.id;
         Item deposited = ItemDatabase.GetItem (id);
-        int leftovers = Player.instance.RemoveItem (id);
+        int leftovers = GameManager.mainPlayer.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
         if (leftovers <= 0) {
@@ -164,7 +164,7 @@ public class ContainerUI : MonoBehaviour {
 
         int id = selectedItem.id;
         Item withdrawn = ItemDatabase.GetItem (id);
-        if (!Player.instance.inventory.HasSpace (withdrawn)) return;
+        if (!GameManager.mainPlayer.inventory.HasSpace (withdrawn)) return;
 
         int leftovers = container.inventory.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
@@ -177,11 +177,11 @@ public class ContainerUI : MonoBehaviour {
         }
 
         if (playerItemsDisplays.ContainsKey (id)) {
-            Player.instance.AddItem (withdrawn);
-            Item newAmount = Player.instance.inventory.GetItem (id);
+            GameManager.mainPlayer.AddItem (withdrawn);
+            Item newAmount = GameManager.mainPlayer.inventory.GetItem (id);
             playerItemsDisplays[id].text = $"{newAmount.count}x {newAmount.name}";
         } else {
-            Player.instance.AddItem (withdrawn);
+            GameManager.mainPlayer.AddItem (withdrawn);
             CreateItemButton (withdrawn, instance.playerItemsParent, true, playerItemsDisplays);
         }
 

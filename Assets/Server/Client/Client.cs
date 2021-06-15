@@ -26,7 +26,7 @@ namespace GameServer {
         public bool loggedIn { get; private set; } = false;
         public Firebase.Auth.FirebaseUser user { get; private set; }
 
-        public Person player;
+        public Player player;
         public Dictionary<int, Inventory> banks = new Dictionary<int, Inventory> ();
 
         public Client (int id) {
@@ -43,7 +43,7 @@ namespace GameServer {
             ClientDatabaseData data = await Database.GetUser (user.UserId);
 
             // Spawn the player
-            player = (Person) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
+            player = GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
             loggedIn = true;
 
             // Load the inventory

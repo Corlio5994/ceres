@@ -34,7 +34,7 @@ public class InventoryUI : MonoBehaviour {
         }
         currentItemText = null;
 
-        List<Item> playerItems = Player.instance.inventory.GetSortedItems ();
+        List<Item> playerItems = GameManager.mainPlayer.inventory.GetSortedItems ();
         foreach (Item item in playerItems) {
             CreateItemButton (item);
         }
@@ -62,8 +62,8 @@ public class InventoryUI : MonoBehaviour {
     }
 
     public static void ShowAnyItem () {
-        if (Player.instance.inventory.itemCount > 0) {
-            ShowItem (Player.instance.inventory.GetSortedItems () [0]);
+        if (GameManager.mainPlayer.inventory.itemCount > 0) {
+            ShowItem (GameManager.mainPlayer.inventory.GetSortedItems () [0]);
         } else {
             instance.layout.SetActive (false);
         }
@@ -103,7 +103,7 @@ public class InventoryUI : MonoBehaviour {
         if (selectedItem == null) return;
 
         int id = selectedItem.id;
-        int leftovers = Player.instance.DropItem (id);
+        int leftovers = GameManager.mainPlayer.DropItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
         if (leftovers <= 0) {

@@ -56,6 +56,7 @@ public partial class MainMenuUI : MonoBehaviour {
     }
 
     void Awake () {
+        instance = this;
         versionText.text = Constants.version;
     }
 

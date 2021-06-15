@@ -31,7 +31,7 @@ public class Entity : MonoBehaviour {
         SetDestination (transform.position);
     }
 
-    protected void Interact (Interactable interactable) {
+    public void Interact (Interactable interactable) {
         this.interactable = interactable;
         SetDestination (interactable.transform.position);
     }

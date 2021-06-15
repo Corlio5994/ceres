@@ -54,7 +54,7 @@ public class ItemPickup : Interactable {
     public override void Interact (Entity entity) {
         int count = item.count;
         item = entity.AddItem (item);
-        if (entity == Player.instance)
+        if (entity == GameManager.mainPlayer)
             PacketSender.ItemPickedUp (this, item == null ? count : count - item.count);
 
         if (item == null) {

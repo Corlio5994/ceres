@@ -137,7 +137,7 @@ public static class EventHandler {
     static void PlayerPosition (Packet packet) {
         Vector3 position = packet.ReadVector ();
 
-        GameManager.player.transform.position = position;
+        GameManager.mainPlayer.transform.position = position;
     }
 
     static void OtherPlayerMoved (Packet packet) {

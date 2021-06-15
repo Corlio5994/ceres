@@ -33,7 +33,7 @@ namespace GameServer {
 
         public static void PlayerData (Client client) {
             using (Packet packet = new Packet (ServerPackets.PlayerData)) {
-                Person player = client.player;
+                Player player = client.player;
                 packet.Write (player.transform.position);
 
                 Client[] otherPlayers = Server.GetOtherClients (client);
