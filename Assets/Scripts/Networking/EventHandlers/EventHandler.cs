@@ -85,7 +85,7 @@ public static class EventHandler {
 
     private static void LoginAccepted (Packet packet) {
         Client.Login ();
-        GameManager.LoadScene ("World");
+        StateManager.LoadScene ("World");
         Console.Log ($"Logged in");
     }
 
@@ -114,7 +114,7 @@ public static class EventHandler {
     private static void LogoutSuccessful (Packet packet) {
         Console.Log ($"Logged out");
         GameManager.Logout ();
-        GameManager.LoadScene ("Main Menu");
+        StateManager.LoadScene ("Main Menu");
     }
 
     private static void OtherPlayerLoggedIn (Packet packet) {

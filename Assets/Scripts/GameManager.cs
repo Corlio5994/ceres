@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     private static Entity playerPrefab;
@@ -10,8 +8,6 @@ public class GameManager : MonoBehaviour {
     private static Dictionary<int, Person> otherPlayers = new Dictionary<int, Person> ();
     public static Player player { get; private set; }
     public static bool showingUI { get; private set; } = false;
-
-    [SerializeField] private bool singlePlayer = false;
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private Person _otherPlayerPrefab;
 
@@ -33,9 +29,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start () {
-        if (singlePlayer && SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null) {
+        if (StateManager.SinglePlayer) {
             SpawnPlayer (Vector3.up, Quaternion.identity);
-        } else if (Client.connected) {
+        } else if (StateManager.Client) {
             PacketSender.PlayerDataRequest ();
             PacketSender.ItemPickupDataRequest();
             PacketSender.BankDataRequest();
@@ -53,10 +49,6 @@ public class GameManager : MonoBehaviour {
 
     private static bool ShowingUI () {
         return InventoryUI.shown || EscapeMenuUI.shown || ContainerUI.shown || Chat.typing || Console.shown;
-    }
-
-    public static void LoadScene (string scene) {
-        SceneManager.LoadSceneAsync (scene);
     }
 
     public static Entity SpawnPlayer (Vector3 position, Quaternion rotation, int clientID = -1) {
