@@ -3,16 +3,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TooltipUI : MonoBehaviour {
-    private static bool showing = false;
-    private static TooltipUI instance;
+    static bool showing = false;
+    static TooltipUI instance;
 
-    [SerializeField] private RectTransform tooltip;
-    [SerializeField] private TMP_Text tooltipTitleText;
-    [SerializeField] private TMP_Text subtitleText;
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private Vector2 screenPadding;
-    [SerializeField] private float spacing;
-    private Vector2 tooltipDirection = Vector2.one;
+    [SerializeField] RectTransform tooltip;
+    [SerializeField] TMP_Text tooltipTitleText;
+    [SerializeField] TMP_Text subtitleText;
+    [SerializeField] TMP_Text descriptionText;
+    [SerializeField] Vector2 screenPadding;
+    [SerializeField] float spacing;
+    Vector2 tooltipDirection = Vector2.one;
+
+    public static void ShowTooltip (string title, string subtitle = "", string description = "") {
+        instance.tooltipTitleText.text = title;
+        instance.subtitleText.text = subtitle;
+        instance.descriptionText.text = description;
+        showing = true;
+        instance.tooltip.gameObject.SetActive (true);
+    }
+
+    public static void SetTooltipRarity (Color32 color) {
+        instance.tooltipTitleText.color = color;
+    }
+
+    public static void HideTooltip () {
+        instance.tooltip.gameObject.SetActive (false);
+        showing = false;
+    }
 
     void Awake () {
         instance = this;
@@ -42,22 +59,5 @@ public class TooltipUI : MonoBehaviour {
             tooltip.position = Input.mousePosition + (Vector3) (offset * tooltipDirection);
             // Move tooltip to mouse pos 
         }
-    }
-
-    public static void ShowTooltip (string title, string subtitle = "", string description = "") {
-        instance.tooltipTitleText.text = title;
-        instance.subtitleText.text = subtitle;
-        instance.descriptionText.text = description;
-        showing = true;
-        instance.tooltip.gameObject.SetActive (true);
-    }
-
-    public static void SetTooltipRarity (Color32 color) {
-        instance.tooltipTitleText.color = color;
-    }
-
-    public static void HideTooltip () {
-        instance.tooltip.gameObject.SetActive (false);
-        showing = false;
     }
 }

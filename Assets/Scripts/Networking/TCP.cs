@@ -6,36 +6,23 @@ using UnityEngine;
 public static partial class Client {
     public static class TCP {
         public static TcpClient socket;
-        private static NetworkStream stream;
-        private static Packet receivedData;
-        private static byte[] receiveBuffer;
-        private const int dataBufferSize = 4096;
+        static NetworkStream stream;
+        static Packet receivedData;
+        static byte[] receiveBuffer;
 
         public static void Connect () {
             Console.Log ("Connecting TCP");
 
             socket = new TcpClient {
-                ReceiveBufferSize = dataBufferSize,
-                SendBufferSize = dataBufferSize
+                ReceiveBufferSize = Constants.dataBufferSize,
+                SendBufferSize = Constants.dataBufferSize
             };
 
-            receiveBuffer = new byte[dataBufferSize];
+            receiveBuffer = new byte[Constants.dataBufferSize];
             socket.BeginConnect (Constants.serverIP, Constants.port, ConnectCallback, socket);
         }
 
-        private static void ConnectCallback (IAsyncResult result) {
-            socket.EndConnect (result);
-
-            if (!socket.Connected) {
-                return;
-            }
-
-            stream = socket.GetStream ();
-            receivedData = new Packet ();
-
-            stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
-            MainMenuUI.ShowMainMenuPanel ();
-        }
+        
 
         public static void SendData (Packet packet) {
             try {
@@ -47,7 +34,25 @@ public static partial class Client {
             }
         }
 
-        private static void ReceiveCallback (IAsyncResult result) {
+        public static void Disconnect () {
+            socket.Close ();
+        }
+
+        static void ConnectCallback (IAsyncResult result) {
+            socket.EndConnect (result);
+
+            if (!socket.Connected) {
+                return;
+            }
+
+            stream = socket.GetStream ();
+            receivedData = new Packet ();
+
+            stream.BeginRead (receiveBuffer, 0, Constants.dataBufferSize, ReceiveCallback, null);
+            MainMenuUI.ShowMainMenuPanel ();
+        }
+
+        static void ReceiveCallback (IAsyncResult result) {
             try {
                 int byteLength = stream.EndRead (result);
                 if (byteLength <= 0) {
@@ -59,13 +64,13 @@ public static partial class Client {
                 Array.Copy (receiveBuffer, data, byteLength);
 
                 receivedData.Reset (HandleData (data));
-                stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+                stream.BeginRead (receiveBuffer, 0, Constants.dataBufferSize, ReceiveCallback, null);
             } catch {
                 Client.Disconnect ();
             }
         }
 
-        private static bool HandleData (byte[] data) {
+        static bool HandleData (byte[] data) {
             int packetLength = 0;
 
             receivedData.SetBytes (data);
@@ -99,14 +104,6 @@ public static partial class Client {
             }
 
             return false;
-        }
-
-        public static int GetPort () {
-            return ((IPEndPoint) socket.Client.LocalEndPoint).Port;
-        }
-
-        public static void Disconnect () {
-            socket.Close ();
         }
     }
 }

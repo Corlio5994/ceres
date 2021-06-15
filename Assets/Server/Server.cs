@@ -9,11 +9,10 @@ namespace GameServer {
         public static int maxPlayers { get; private set; }
         public static int port { get; private set; }
         public const string version = "1.0.0";
-
-        private static Dictionary<int, Client> clients = new Dictionary<int, Client> ();
-
-        private static TcpListener tcpListener;
         public static bool active { get; private set; } = false;
+
+        static Dictionary<int, Client> clients = new Dictionary<int, Client> ();
+        static TcpListener tcpListener;
 
         public static void Start () {
             active = true;
@@ -61,7 +60,14 @@ namespace GameServer {
             return result.ToArray ();
         }
 
-        private static void TCPConnectCallback (IAsyncResult result) {
+        public static void DisconnectClient (Client client) {
+            ThreadManager.ExecuteOnMainThread (() => {
+                client.Disconnect ();
+                clients.Remove (client.id);
+            });
+        }
+
+        static void TCPConnectCallback (IAsyncResult result) {
             TcpClient client = tcpListener.EndAcceptTcpClient (result);
             tcpListener.BeginAcceptTcpClient (TCPConnectCallback, null);
             Console.Log ($"Incoming connection ({client.Client.RemoteEndPoint.ToString()})");
@@ -78,13 +84,6 @@ namespace GameServer {
             }
 
             Console.Log ($"Failed to connect: server full ({client.Client.RemoteEndPoint})");
-        }
-
-        public static void Disconnect (Client client) {
-            ThreadManager.ExecuteOnMainThread (() => {
-                client.Disconnect ();
-                clients.Remove (client.id);
-            });
         }
     }
 }

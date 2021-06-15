@@ -3,9 +3,9 @@ using UnityEngine;
 
 [RequireComponent (typeof (TMP_Text))]
 public class AutosizeText : MonoBehaviour {
-    private TMP_Text text;
-    private RectTransform rectTransform;
-    [SerializeField] private float maxWidth = 300;
+    [SerializeField] float maxWidth = 300;
+    TMP_Text text;
+    RectTransform rectTransform;
 
     void Start () {
         text = GetComponent<TMP_Text> ();

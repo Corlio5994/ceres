@@ -3,35 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-    [SerializeField] private float _smoothTime = 0.5f;
-    [SerializeField] private float _moveSpeed = 10f;
-    [SerializeField] private float _minimumZoom = 5f;
-    [SerializeField] private float _maximumZoom = 13f;
-    [SerializeField] private float _zoomSpeed = 0.25f;
+    static Transform target;
+    static Vector3 offset;
+    static float zoom;
 
-    private static float smoothTime;
-    private static float moveSpeed;
-    private static float zoom;
-    private static float minimumZoom;
-    private static float maximumZoom;
-    private static float zoomSpeed;
-    private static Transform target;
-    private static Vector3 offset;
-    private static Vector3 velocity;
+    [SerializeField] float smoothTime = 0.5f;
+    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float minimumZoom = 5f;
+    [SerializeField] float maximumZoom = 13f;
+    [SerializeField] float zoomSpeed = 0.25f;
+
+    public static void SetTarget (Transform target, bool reposition = true) {
+        CameraController.target = target;
+        if (reposition)
+            Camera.main.transform.position = target.position + offset;
+    }
 
     void Awake () {
-        smoothTime = _smoothTime;
-        moveSpeed = _moveSpeed;
-        minimumZoom = _minimumZoom;
-        maximumZoom = _maximumZoom;
-        zoomSpeed = _zoomSpeed;
         zoom = minimumZoom;
         offset = transform.position;
     }
 
     void Update () {
         if (target != null)
-            transform.position = Vector3.SmoothDamp (transform.position, target.transform.position + offset, ref velocity, smoothTime, 100f);
+            transform.position = Vector3.Lerp (transform.position, target.transform.position + offset, smoothTime * Time.deltaTime);
         else {
             Vector3 input = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, Input.GetAxisRaw ("Vertical"));
             transform.position += input * moveSpeed * Time.deltaTime;
@@ -39,14 +34,8 @@ public class CameraController : MonoBehaviour {
 
         Vector2 scrollDelta = Input.mouseScrollDelta;
         zoom -= scrollDelta.y * zoomSpeed;
-        if (!GameServer.Server.active)
+        if (!StateManager.server)
             zoom = Mathf.Clamp (zoom, minimumZoom, maximumZoom);
-        Camera.main.orthographicSize = zoom;
-    }
-
-    public static void SetTarget (Transform target, bool reposition = true) {
-        CameraController.target = target;
-        if (reposition)
-            Camera.main.transform.position = target.position + offset;
+        Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom, smoothTime * Time.deltaTime);
     }
 }

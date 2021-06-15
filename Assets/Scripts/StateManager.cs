@@ -3,25 +3,25 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 
 public class StateManager : MonoBehaviour {
-    public static bool Client { get; private set; } = false;
-    public static bool Server { get; private set; } = false;
-    public static bool SinglePlayer { get; private set; } = false;
+    public static bool client { get; private set; } = false;
+    public static bool server { get; private set; } = false;
+    public static bool singlePlayer { get; private set; } = false;
 
-    [SerializeField] private bool _singlePlayer;
+    [SerializeField] bool _singlePlayer;
 
     public static void LoadScene (string name) {
         SceneManager.LoadScene (name);
     }
 
     public static void OnConnect () {
-        Client = true;
-        Server = false;
-        SinglePlayer = false;
+        client = true;
+        server = false;
+        singlePlayer = false;
     }
 
     void Awake () {
         bool headless = SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null; // Whether the server was built without graphics
-        Server = (headless || !_singlePlayer) && !Client; // If we are headless or in Editor and singlePlayer is ticked, and Client isn't connected 
-        SinglePlayer = !(Server || Client); // If we aren't Server or Client, we are SinglePlayer
+        server = (headless || !_singlePlayer) && !client; // If we are headless or in Editor and singlePlayer is ticked, and Client isn't connected 
+        singlePlayer = !(server || client); // If we aren't Server or Client, we are SinglePlayer
     }
 }

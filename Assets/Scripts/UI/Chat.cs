@@ -3,12 +3,38 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Chat : MonoBehaviour {
-    private static Chat instance;
     public static bool typing { get; private set; }
+    static Chat instance;
 
-    [SerializeField] private RectTransform messages;
-    [SerializeField] private TMP_Text messagePrefab;
-    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] RectTransform messages;
+    [SerializeField] TMP_Text messagePrefab;
+    [SerializeField] TMP_InputField inputField;
+
+    public static void AddMessage (string message) {
+        TMP_Text newMessage = Instantiate (instance.messagePrefab, Vector3.zero, Quaternion.identity, instance.messages);
+        newMessage.text = message;
+    }
+
+    public static void Focus () {
+        instance.inputField.ActivateInputField ();
+        typing = true;
+    }
+
+    public static void Unfocus () {
+        instance.inputField.DeactivateInputField ();
+        instance.inputField.text = "";
+        typing = false;
+    }
+
+    public static void SendMessage () {
+        string message = instance.inputField.text.Trim();
+        if (message == "") return;
+        instance.inputField.text = "";
+
+        AddMessage (message);
+
+        PacketSender.ChatMessage (message);
+    }
 
     void Awake () {
         instance = this;
@@ -36,31 +62,5 @@ public class Chat : MonoBehaviour {
             if (Input.GetKeyDown (KeyCode.KeypadEnter) || Input.GetKeyDown (KeyCode.Return))
                 Focus ();
         }
-    }
-
-    public static void AddMessage (string message) {
-        TMP_Text newMessage = Instantiate (instance.messagePrefab, Vector3.zero, Quaternion.identity, instance.messages);
-        newMessage.text = message;
-    }
-
-    public static void Focus () {
-        instance.inputField.ActivateInputField ();
-        typing = true;
-    }
-
-    public static void Unfocus () {
-        instance.inputField.DeactivateInputField ();
-        instance.inputField.text = "";
-        typing = false;
-    }
-
-    public static void SendMessage () {
-        string message = instance.inputField.text.Trim();
-        if (message == "") return;
-        instance.inputField.text = "";
-
-        AddMessage (message);
-
-        PacketSender.ChatMessage (message);
     }
 }

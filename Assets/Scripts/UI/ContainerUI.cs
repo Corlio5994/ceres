@@ -7,46 +7,30 @@ using UnityEngine.UI;
 public class ContainerUI : MonoBehaviour {
     public static bool shown { get; private set; }
     public static Container container { get; private set; }
-    private static ContainerUI instance;
-    private static TMP_Text currentItemText;
-    private static Item selectedItem;
-    private static bool deposit;
-    private static Dictionary<int, TMP_Text> playerItemsDisplays;
-    private static Dictionary<int, TMP_Text> containerItemsDisplays;
+    static ContainerUI instance;
+    static TMP_Text currentItemText;
+    static Item selectedItem;
+    static bool deposit;
+    static Dictionary<int, TMP_Text> playerItemsDisplays;
+    static Dictionary<int, TMP_Text> containerItemsDisplays;
 
-    [SerializeField] private GameObject content;
-    [SerializeField] private GameObject layout;
-    [SerializeField] private GameObject withdrawButton;
-    [SerializeField] private GameObject depositButton;
-    [SerializeField] private TMP_Text titleText;
-    [SerializeField] private RectTransform playerItemsParent;
-    [SerializeField] private RectTransform containerItemsParent;
-    [SerializeField] private TMP_Text itemPrefab;
+    [SerializeField] GameObject content;
+    [SerializeField] GameObject layout;
+    [SerializeField] GameObject withdrawButton;
+    [SerializeField] GameObject depositButton;
+    [SerializeField] TMP_Text titleText;
+    [SerializeField] RectTransform playerItemsParent;
+    [SerializeField] RectTransform containerItemsParent;
+    [SerializeField] TMP_Text itemPrefab;
 
-    [SerializeField] private TMP_Text itemTitle;
-    [SerializeField] private TMP_Text itemCategory;
-    [SerializeField] private TMP_Text itemWeight;
-    [SerializeField] private TMP_Text itemCount;
-    [SerializeField] private TMP_Text itemDescription;
+    [SerializeField] TMP_Text itemTitle;
+    [SerializeField] TMP_Text itemCategory;
+    [SerializeField] TMP_Text itemWeight;
+    [SerializeField] TMP_Text itemCount;
+    [SerializeField] TMP_Text itemDescription;
 
-    [SerializeField] private Color textColour;
-    [SerializeField] private Color selectedColour;
-
-    void Awake () {
-        instance = this;
-    }
-
-    void Start () {
-        Hide ();
-    }
-
-    void Update () {
-        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Tab)) && shown) {
-            container.Close ();
-            Hide ();
-        }
-    }
-
+    [SerializeField] Color textColour;
+    [SerializeField] Color selectedColour;
     public static void Show (Container container, bool reset = true) {
         ContainerUI.container = container;
 
@@ -203,5 +187,20 @@ public class ContainerUI : MonoBehaviour {
 
         if (container as Bank != null)
             PacketSender.BankWithdraw ((Bank) container, withdrawn);
+    }
+
+    void Awake () {
+        instance = this;
+    }
+
+    void Start () {
+        Hide ();
+    }
+
+    void Update () {
+        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Tab)) && shown) {
+            container.Close ();
+            Hide ();
+        }
     }
 }

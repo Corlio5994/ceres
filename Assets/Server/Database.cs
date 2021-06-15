@@ -8,16 +8,15 @@ using Newtonsoft.Json;
 
 namespace GameServer {
     public static class Database {
-        private static DatabaseReference reference;
-        private static string databaseURL = "https://ceres-fcf64-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        private static JsonSerializerSettings options;
+        static DatabaseReference reference;
+        static string databaseURL = "https://ceres-fcf64-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        static JsonSerializerSettings options;
 
         public static void Start () {
             reference = FirebaseDatabase.GetInstance (FirebaseSetup.app, databaseURL).RootReference;
 
             options = new JsonSerializerSettings { };
             options.Converters.Add (new VectorJsonConverter ());
-            // options.Converters.Add (new DictionaryJsonConverter ());
         }
 
         public static async Task<ClientDatabaseData> GetUser (string userID) {

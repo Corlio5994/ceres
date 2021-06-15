@@ -2,20 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    private static Entity playerPrefab;
-    private static Entity otherPlayerPrefab;
-    private static GameManager instance;
-    private static Dictionary<int, Person> otherPlayers = new Dictionary<int, Person> ();
     public static Player player { get; private set; }
     public static bool showingUI { get; private set; } = false;
-    [SerializeField] private Player _playerPrefab;
-    [SerializeField] private Person _otherPlayerPrefab;
-
     public static LayerMask groundMask { get; private set; }
     public static LayerMask interactableMask { get; private set; }
+    static Entity playerPrefab;
+    static Entity otherPlayerPrefab;
+    static GameManager instance;
+    static Dictionary<int, Person> otherPlayers = new Dictionary<int, Person> ();
 
-    [SerializeField] private LayerMask _groundMask;
-    [SerializeField] private LayerMask _interactableMask;
+    [SerializeField] Player _playerPrefab;
+    [SerializeField] Person _otherPlayerPrefab;
+    [SerializeField] LayerMask _groundMask;
+    [SerializeField] LayerMask _interactableMask;
 
     void Awake () {
         if (instance != null)
@@ -29,9 +28,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start () {
-        if (StateManager.SinglePlayer) {
+        if (StateManager.singlePlayer) {
             SpawnPlayer (Vector3.up, Quaternion.identity);
-        } else if (StateManager.Client) {
+        } else if (StateManager.client) {
             PacketSender.PlayerDataRequest ();
             PacketSender.ItemPickupDataRequest();
             PacketSender.BankDataRequest();
@@ -80,7 +79,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnApplicationQuit () {
-        if (GameServer.Server.active) {
+        if (StateManager.server) {
             GameServer.Server.Stop ();
         }
     }

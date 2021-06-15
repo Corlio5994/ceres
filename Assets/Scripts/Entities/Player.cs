@@ -7,9 +7,7 @@ public class Player : Entity {
         instance = this;
     }
 
-    protected override void Update () {
-        base.Update ();
-
+    void Update () {
         if (GameManager.showingUI) return;
 
         if (Input.GetMouseButtonDown (0)) {

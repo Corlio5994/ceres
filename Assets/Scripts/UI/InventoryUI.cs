@@ -11,38 +11,20 @@ public class InventoryUI : MonoBehaviour {
     private static TMP_Text currentItemText;
     private static Dictionary<int, TMP_Text> itemDisplays;
 
-    [SerializeField] private TMP_Text itemPrefab;
+    [SerializeField] TMP_Text itemPrefab;
 
-    [SerializeField] private GameObject content;
-    [SerializeField] private GameObject layout;
-    [SerializeField] private Transform itemsList;
+    [SerializeField] GameObject content;
+    [SerializeField] GameObject layout;
+    [SerializeField] Transform itemsList;
 
-    [SerializeField] private TMP_Text itemTitle;
-    [SerializeField] private TMP_Text itemCategory;
-    [SerializeField] private TMP_Text itemWeight;
-    [SerializeField] private TMP_Text itemCount;
-    [SerializeField] private TMP_Text itemDescription;
+    [SerializeField] TMP_Text itemTitle;
+    [SerializeField] TMP_Text itemCategory;
+    [SerializeField] TMP_Text itemWeight;
+    [SerializeField] TMP_Text itemCount;
+    [SerializeField] TMP_Text itemDescription;
 
-    [SerializeField] private Color textColour;
-    [SerializeField] private Color selectedColour;
-
-    void Awake () {
-        instance = this;
-    }
-
-    void Start () {
-        Hide ();
-    }
-
-    void Update () {
-        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && shown) {
-            Hide ();
-        }
-
-        if (Input.GetKeyDown (KeyCode.Tab) && !GameManager.showingUI) {
-            Show ();
-        }
-    }
+    [SerializeField] Color textColour;
+    [SerializeField] Color selectedColour;
 
     public static void Show () {
         itemDisplays = new Dictionary<int, TMP_Text> ();
@@ -129,6 +111,24 @@ public class InventoryUI : MonoBehaviour {
             ShowAnyItem ();
         } else {
             currentItemText.text = $"{selectedItem.count}x {selectedItem.name}";
+        }
+    }
+
+    void Awake () {
+        instance = this;
+    }
+
+    void Start () {
+        Hide ();
+    }
+
+    void Update () {
+        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && shown) {
+            Hide ();
+        }
+
+        if (Input.GetKeyDown (KeyCode.Tab) && !GameManager.showingUI) {
+            Show ();
         }
     }
 }

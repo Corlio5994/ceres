@@ -10,4 +10,5 @@ public static class Constants {
     public const string version = "1.1.0";
     public const ushort port = 60000;
     public const int maxPlayers = 20;
+    public const int dataBufferSize = 4096;
 }

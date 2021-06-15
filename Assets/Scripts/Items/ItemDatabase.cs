@@ -3,14 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemDatabase : MonoBehaviour {
-    private static ItemDatabase instance;
-    private static Items categorisedItems;
-    private static Dictionary<int, Item> items = new Dictionary<int, Item> ();
     public static Color[] rarityColours;
+    static ItemDatabase instance;
+    static Items categorisedItems;
+    static Dictionary<int, Item> items = new Dictionary<int, Item> ();
 
     [SerializeField] public Color[] _rarityColours;
-    [SerializeField] private string textAssetPath;
-    [SerializeField] private ItemPickup itemPickupPrefab;
+    [SerializeField] string textAssetPath;
+    [SerializeField] ItemPickup itemPickupPrefab;
+
+    public static Item GetItem (int id, int count = 1) {
+        Item item = (Item) items[id].Clone ();
+        item.count = count;
+        return item;
+    }
+
+    public static ItemPickup SpawnItemPickup (int id, int count, Vector3 position, int pickupID = -1) {
+        ItemPickup pickup = Instantiate (instance.itemPickupPrefab, position, Quaternion.identity);
+        Item item = GetItem (id, count);
+        pickup.SetItem (item, pickupID);
+        return pickup;
+    }
 
     void Awake () {
         instance = this;
@@ -32,21 +45,8 @@ public class ItemDatabase : MonoBehaviour {
             items.Add (item.id, item);
     }
 
-    public static Item GetItem (int id, int count = 1) {
-        Item item = (Item) items[id].Clone ();
-        item.count = count;
-        return item;
-    }
-
-    public static ItemPickup SpawnItemPickup (int id, int count, Vector3 position, int pickupID = -1) {
-        ItemPickup pickup = Instantiate (instance.itemPickupPrefab, position, Quaternion.identity);
-        Item item = GetItem (id, count);
-        pickup.SetItem (item, pickupID);
-        return pickup;
-    }
-
     [System.Serializable]
-    private class Items {
+    class Items {
         public Weapon[] weapons;
         public Armour[] armours;
         public Food[] food;

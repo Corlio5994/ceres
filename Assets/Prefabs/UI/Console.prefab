@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8233284059819451208
 RectTransform:
   m_ObjectHideFlags: 0
@@ -233,6 +233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac54aa68736dde4c98b97bfafb874c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  content: {fileID: 8233284059819451209}
-  messagesParent: {fileID: 8233284060330136073}
-  textPrefab: {fileID: 6615792667818021342, guid: 280f34fa109d9ca42b8cd09c74c318b3, type: 3}
+  _content: {fileID: 8233284059819451209}
+  _messagesParent: {fileID: 8233284060330136073}
+  _textPrefab: {fileID: 6615792667818021342, guid: 280f34fa109d9ca42b8cd09c74c318b3, type: 3}

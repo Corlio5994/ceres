@@ -1984,7 +1984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65e133cce0002b4e9ec3c570892a619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _singlePlayer: 0
+  _singlePlayer: 1
 --- !u!1 &498203171
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,11 +2850,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124e8cb9c6e7a6b41a9c98fd706b078e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smoothTime: 0.5
-  _moveSpeed: 10
-  _minimumZoom: 5
-  _maximumZoom: 13
-  _zoomSpeed: 0.25
+  smoothTime: 0.5
+  moveSpeed: 10
+  minimumZoom: 5
+  maximumZoom: 13
+  zoomSpeed: 0.25
 --- !u!1 &693939663
 GameObject:
   m_ObjectHideFlags: 0
@@ -8684,10 +8684,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 18448943}
     m_Modifications:
-    - target: {fileID: 8233284059819451209, guid: c3a1543e502929f4ca6551812444bcf3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8233284061638041705, guid: c3a1543e502929f4ca6551812444bcf3, type: 3}
       propertyPath: m_Name
       value: Console

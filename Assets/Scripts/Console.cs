@@ -12,44 +12,6 @@ public class Console : MonoBehaviour {
     [SerializeField] RectTransform messagesParent;
     [SerializeField] TMP_Text textPrefab;
 
-    void Awake () {
-        if (instance != null) {
-            Destroy (gameObject);
-            return;
-        }
-
-        instance = this;
-        Hide ();
-    }
-
-    void Start () {
-        Clear ();
-        Log ("Initialising Console...");
-        Log ($"Game Version: {Constants.version}", "orange");
-    }
-
-    void Update () {
-        if (shown) {
-            if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.F1)) {
-                Hide ();
-            }
-        } else if (Input.GetKeyDown (KeyCode.F1)) {
-            Show ();
-        }
-    }
-    void FixedUpdate () {
-        if (queuedMessages.Count > 0) {
-            string[] newMessages;
-            lock (queuedMessages) {
-                newMessages = queuedMessages.ToArray ();
-                queuedMessages.Clear ();
-            }
-            foreach (string message in newMessages) {
-                AddMessage (message);
-            }
-        }
-    }
-
     public static void Clear () {
         instance.textPrefab.text = "";
     }
@@ -82,5 +44,44 @@ public class Console : MonoBehaviour {
     static void AddMessage (string message) {
         TMP_Text newText = Instantiate (instance.textPrefab, Vector3.zero, Quaternion.identity, instance.messagesParent);
         newText.text = message;
+    }
+
+    void Awake () {
+        if (instance != null) {
+            Destroy (gameObject);
+            return;
+        }
+
+        instance = this;
+        Hide ();
+    }
+
+    void Start () {
+        Clear ();
+        Log ("Initialising Console...");
+        Log ($"Game Version: {Constants.version}", "orange");
+    }
+
+    void Update () {
+        if (shown) {
+            if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.F1)) {
+                Hide ();
+            }
+        } else if (Input.GetKeyDown (KeyCode.F1)) {
+            Show ();
+        }
+    }
+    
+    void FixedUpdate () {
+        if (queuedMessages.Count > 0) {
+            string[] newMessages;
+            lock (queuedMessages) {
+                newMessages = queuedMessages.ToArray ();
+                queuedMessages.Clear ();
+            }
+            foreach (string message in newMessages) {
+                AddMessage (message);
+            }
+        }
     }
 }

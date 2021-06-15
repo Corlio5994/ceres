@@ -6,35 +6,56 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public partial class MainMenuUI : MonoBehaviour {
-    private static GameObject mainMenuPanel;
-    private static GameObject credentialPanel;
-    private static GameObject loadingSpinner;
-    private static TMP_InputField usernameInput;
-    private static TMP_InputField passwordInput;
-    private static TMP_Text titleText;
-    private static TMP_Text loginText;
+    static MainMenuUI instance;
 
-    [SerializeField] private GameObject _mainMenuPanel;
-    [SerializeField] private GameObject _credentialsPanel;
-    [SerializeField] private GameObject _loadingSpinner;
-    [SerializeField] private TMP_InputField _usernameInput;
-    [SerializeField] private TMP_InputField _passwordInput;
-    [SerializeField] private TMP_Text _titleText;
-    [SerializeField] private TMP_Text _loginText;
-    [SerializeField] private TMP_Text versionText;
-    [SerializeField] private float maximumBobbing = 20f;
-    [SerializeField] private float bobbingSpeed = 2f;
+    [SerializeField] GameObject mainMenuPanel;
+    [SerializeField] GameObject credentialsPanel;
+    [SerializeField] GameObject loadingSpinner;
+    [SerializeField] TMP_InputField usernameInput;
+    [SerializeField] TMP_InputField passwordInput;
+    [SerializeField] TMP_Text titleText;
+    [SerializeField] TMP_Text loginText;
+    [SerializeField] TMP_Text versionText;
+    [SerializeField] float maximumBobbing = 20f;
+    [SerializeField] float bobbingSpeed = 2f;
+
+    public static void ShowMainMenuPanel () {
+        instance.mainMenuPanel.SetActive (true);
+        instance.credentialsPanel.SetActive (false);
+        instance.loadingSpinner.SetActive (false);
+    }
+
+    public static void ShowCredentialsPanel () {
+        instance.usernameInput.text = "";
+        instance.passwordInput.text = "";
+        instance.usernameInput.ActivateInputField ();
+
+        instance.mainMenuPanel.SetActive (false);
+        instance.credentialsPanel.SetActive (true);
+        instance.loadingSpinner.SetActive (false);
+    }
+
+    public static void ShowLoadingSpinner () {
+        instance.mainMenuPanel.SetActive (false);
+        instance.credentialsPanel.SetActive (false);
+        instance.loadingSpinner.SetActive (true);
+    }
+
+    public static void Login () {
+        string username = instance.usernameInput.text;
+        string password = instance.passwordInput.text;
+
+        if (username != "" && password != "") {
+            ShowLoadingSpinner ();
+            PacketSender.Login (username, password);
+        }
+    }
+
+    public static void Quit () {
+        GameManager.Quit ();
+    }
 
     void Awake () {
-        mainMenuPanel = _mainMenuPanel;
-        credentialPanel = _credentialsPanel;
-        loadingSpinner = _loadingSpinner;
-
-        usernameInput = _usernameInput;
-        passwordInput = _passwordInput;
-
-        titleText = _titleText;
-        loginText = _loginText;
         versionText.text = Constants.version;
     }
 
@@ -55,41 +76,5 @@ public partial class MainMenuUI : MonoBehaviour {
         if (Input.GetKeyDown (KeyCode.KeypadEnter) || Input.GetKeyDown (KeyCode.Return)) {
             Login ();
         }
-    }
-
-    public static void ShowMainMenuPanel () {
-        mainMenuPanel.SetActive (true);
-        credentialPanel.SetActive (false);
-        loadingSpinner.SetActive (false);
-    }
-
-    public static void ShowCredentialsPanel () {
-        usernameInput.text = "";
-        passwordInput.text = "";
-        usernameInput.ActivateInputField ();
-
-        mainMenuPanel.SetActive (false);
-        credentialPanel.SetActive (true);
-        loadingSpinner.SetActive (false);
-    }
-
-    public static void ShowLoadingSpinner () {
-        mainMenuPanel.SetActive (false);
-        credentialPanel.SetActive (false);
-        loadingSpinner.SetActive (true);
-    }
-
-    public static void Login () {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-
-        if (username != "" && password != "") {
-            ShowLoadingSpinner ();
-            PacketSender.Login (username, password);
-        }
-    }
-
-    public static void Quit () {
-        GameManager.Quit ();
     }
 }
