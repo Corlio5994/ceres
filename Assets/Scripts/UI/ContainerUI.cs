@@ -7,46 +7,30 @@ using UnityEngine.UI;
 public class ContainerUI : MonoBehaviour {
     public static bool shown { get; private set; }
     public static Container container { get; private set; }
-    private static ContainerUI instance;
-    private static TMP_Text currentItemText;
-    private static Item selectedItem;
-    private static bool deposit;
-    private static Dictionary<int, TMP_Text> playerItemsDisplays;
-    private static Dictionary<int, TMP_Text> containerItemsDisplays;
+    static ContainerUI instance;
+    static TMP_Text currentItemText;
+    static Item selectedItem;
+    static bool deposit;
+    static Dictionary<int, TMP_Text> playerItemsDisplays;
+    static Dictionary<int, TMP_Text> containerItemsDisplays;
 
-    [SerializeField] private GameObject content;
-    [SerializeField] private GameObject layout;
-    [SerializeField] private GameObject withdrawButton;
-    [SerializeField] private GameObject depositButton;
-    [SerializeField] private TMP_Text titleText;
-    [SerializeField] private RectTransform playerItemsParent;
-    [SerializeField] private RectTransform containerItemsParent;
-    [SerializeField] private TMP_Text itemPrefab;
+    [SerializeField] GameObject content;
+    [SerializeField] GameObject layout;
+    [SerializeField] GameObject withdrawButton;
+    [SerializeField] GameObject depositButton;
+    [SerializeField] TMP_Text titleText;
+    [SerializeField] RectTransform playerItemsParent;
+    [SerializeField] RectTransform containerItemsParent;
+    [SerializeField] TMP_Text itemPrefab;
 
-    [SerializeField] private TMP_Text itemTitle;
-    [SerializeField] private TMP_Text itemCategory;
-    [SerializeField] private TMP_Text itemWeight;
-    [SerializeField] private TMP_Text itemCount;
-    [SerializeField] private TMP_Text itemDescription;
+    [SerializeField] TMP_Text itemTitle;
+    [SerializeField] TMP_Text itemCategory;
+    [SerializeField] TMP_Text itemWeight;
+    [SerializeField] TMP_Text itemCount;
+    [SerializeField] TMP_Text itemDescription;
 
-    [SerializeField] private Color textColour;
-    [SerializeField] private Color selectedColour;
-
-    void Awake () {
-        instance = this;
-    }
-
-    void Start () {
-        Hide ();
-    }
-
-    void Update () {
-        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Tab)) && shown) {
-            container.Close ();
-            Hide ();
-        }
-    }
-
+    [SerializeField] Color textColour;
+    [SerializeField] Color selectedColour;
     public static void Show (Container container, bool reset = true) {
         ContainerUI.container = container;
 
@@ -62,7 +46,7 @@ public class ContainerUI : MonoBehaviour {
         if (reset)
             currentItemText = null;
 
-        List<Item> playerItems = Player.instance.inventory.GetSortedItems ();
+        List<Item> playerItems = GameManager.mainPlayer.inventory.GetSortedItems ();
         foreach (Item item in playerItems) {
             CreateItemButton (item, instance.playerItemsParent, true, playerItemsDisplays);
         }
@@ -103,8 +87,8 @@ public class ContainerUI : MonoBehaviour {
     }
 
     public static void ShowAnyItem () {
-        if (Player.instance.inventory.itemCount > 0) {
-            ShowItem (Player.instance.inventory.GetSortedItems () [0], true);
+        if (GameManager.mainPlayer.inventory.itemCount > 0) {
+            ShowItem (GameManager.mainPlayer.inventory.GetSortedItems () [0], true);
         } else if (container.inventory.itemCount > 0) {
             ShowItem (container.inventory.GetSortedItems () [0], false);
         } else {
@@ -152,7 +136,7 @@ public class ContainerUI : MonoBehaviour {
 
         int id = selectedItem.id;
         Item deposited = ItemDatabase.GetItem (id);
-        int leftovers = Player.instance.RemoveItem (id);
+        int leftovers = GameManager.mainPlayer.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
         if (leftovers <= 0) {
@@ -180,7 +164,7 @@ public class ContainerUI : MonoBehaviour {
 
         int id = selectedItem.id;
         Item withdrawn = ItemDatabase.GetItem (id);
-        if (!Player.instance.inventory.HasSpace (withdrawn)) return;
+        if (!GameManager.mainPlayer.inventory.HasSpace (withdrawn)) return;
 
         int leftovers = container.inventory.RemoveItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
@@ -193,15 +177,30 @@ public class ContainerUI : MonoBehaviour {
         }
 
         if (playerItemsDisplays.ContainsKey (id)) {
-            Player.instance.AddItem (withdrawn);
-            Item newAmount = Player.instance.inventory.GetItem (id);
+            GameManager.mainPlayer.AddItem (withdrawn);
+            Item newAmount = GameManager.mainPlayer.inventory.GetItem (id);
             playerItemsDisplays[id].text = $"{newAmount.count}x {newAmount.name}";
         } else {
-            Player.instance.AddItem (withdrawn);
+            GameManager.mainPlayer.AddItem (withdrawn);
             CreateItemButton (withdrawn, instance.playerItemsParent, true, playerItemsDisplays);
         }
 
         if (container as Bank != null)
             PacketSender.BankWithdraw ((Bank) container, withdrawn);
+    }
+
+    void Awake () {
+        instance = this;
+    }
+
+    void Start () {
+        Hide ();
+    }
+
+    void Update () {
+        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Tab)) && shown) {
+            container.Close ();
+            Hide ();
+        }
     }
 }

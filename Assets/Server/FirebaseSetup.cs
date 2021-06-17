@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using Firebase;
@@ -21,3 +22,4 @@ namespace GameServer {
         }
     }
 }
+#endif

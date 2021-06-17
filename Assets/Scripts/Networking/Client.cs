@@ -14,13 +14,14 @@ public static partial class Client {
         if (!connected) {
             TCP.Connect ();
             connected = true;
+            StateManager.OnConnect ();
             return true;
         } else {
             return false;
         }
     }
 
-    public static void Login() {
+    public static void Login () {
         loggedIn = true;
     }
 

@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace GameServer {
 
     public class BankData {
         public int id { get; set; }
-        public List<ItemData> items { get; set; } = new List<ItemData>();
+        public List<ItemData> items { get; set; } = new List<ItemData> ();
     }
 
     public partial class Client {
@@ -26,7 +27,7 @@ namespace GameServer {
         public bool loggedIn { get; private set; } = false;
         public Firebase.Auth.FirebaseUser user { get; private set; }
 
-        public Person player;
+        public Player player;
         public Dictionary<int, Inventory> banks = new Dictionary<int, Inventory> ();
 
         public Client (int id) {
@@ -43,7 +44,7 @@ namespace GameServer {
             ClientDatabaseData data = await Database.GetUser (user.UserId);
 
             // Spawn the player
-            player = (Person) GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
+            player = GameManager.SpawnPlayer (data.position, Quaternion.identity, id);
             loggedIn = true;
 
             // Load the inventory
@@ -52,6 +53,7 @@ namespace GameServer {
             }
 
             // Load the Banks
+            banks = new Dictionary<int, Inventory>();
             foreach (BankData bankData in data.banks) {
                 var newBank = new Inventory (999);
 
@@ -79,31 +81,6 @@ namespace GameServer {
 
             Console.Log ($"[{id}] Logging out");
             loggedIn = false;
-        }
-
-        private ClientDatabaseData GetWriteableData () {
-            ClientDatabaseData data = new ClientDatabaseData ();
-
-            // Save position
-            data.position = player.transform.position;
-
-            // Save the Inventory
-            foreach (Item item in player.inventory.GetSortedItems ()) {
-                data.items.Add (new ItemData { id = item.id, count = item.count });
-            }
-
-            // Save the Banks
-            foreach (KeyValuePair<int, Inventory> bank in banks) {
-                var bankData = new BankData { id = bank.Key };
-
-                foreach (Item item in bank.Value.GetSortedItems ()) {
-                    bankData.items.Add (new ItemData { id = item.id, count = item.count });
-                }
-
-                data.banks.Add (bankData);
-            }
-
-            return data;
         }
 
         // TODO: Move these into a more suitable place
@@ -137,5 +114,31 @@ namespace GameServer {
             tcp.Disconnect ();
             Console.Log ($"[{id}] Disconnected");
         }
+
+        private ClientDatabaseData GetWriteableData () {
+            ClientDatabaseData data = new ClientDatabaseData ();
+
+            // Save position
+            data.position = player.transform.position;
+
+            // Save the Inventory
+            foreach (Item item in player.inventory.GetSortedItems ()) {
+                data.items.Add (new ItemData { id = item.id, count = item.count });
+            }
+
+            // Save the Banks
+            foreach (KeyValuePair<int, Inventory> bank in banks) {
+                var bankData = new BankData { id = bank.Key };
+
+                foreach (Item item in bank.Value.GetSortedItems ()) {
+                    bankData.items.Add (new ItemData { id = item.id, count = item.count });
+                }
+
+                data.banks.Add (bankData);
+            }
+
+            return data;
+        }
     }
 }
+#endif

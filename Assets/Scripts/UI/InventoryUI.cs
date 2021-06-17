@@ -11,38 +11,20 @@ public class InventoryUI : MonoBehaviour {
     private static TMP_Text currentItemText;
     private static Dictionary<int, TMP_Text> itemDisplays;
 
-    [SerializeField] private TMP_Text itemPrefab;
+    [SerializeField] TMP_Text itemPrefab;
 
-    [SerializeField] private GameObject content;
-    [SerializeField] private GameObject layout;
-    [SerializeField] private Transform itemsList;
+    [SerializeField] GameObject content;
+    [SerializeField] GameObject layout;
+    [SerializeField] Transform itemsList;
 
-    [SerializeField] private TMP_Text itemTitle;
-    [SerializeField] private TMP_Text itemCategory;
-    [SerializeField] private TMP_Text itemWeight;
-    [SerializeField] private TMP_Text itemCount;
-    [SerializeField] private TMP_Text itemDescription;
+    [SerializeField] TMP_Text itemTitle;
+    [SerializeField] TMP_Text itemCategory;
+    [SerializeField] TMP_Text itemWeight;
+    [SerializeField] TMP_Text itemCount;
+    [SerializeField] TMP_Text itemDescription;
 
-    [SerializeField] private Color textColour;
-    [SerializeField] private Color selectedColour;
-
-    void Awake () {
-        instance = this;
-    }
-
-    void Start () {
-        Hide ();
-    }
-
-    void Update () {
-        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && shown) {
-            Hide ();
-        }
-
-        if (Input.GetKeyDown (KeyCode.Tab) && !GameManager.showingUI) {
-            Show ();
-        }
-    }
+    [SerializeField] Color textColour;
+    [SerializeField] Color selectedColour;
 
     public static void Show () {
         itemDisplays = new Dictionary<int, TMP_Text> ();
@@ -52,7 +34,7 @@ public class InventoryUI : MonoBehaviour {
         }
         currentItemText = null;
 
-        List<Item> playerItems = Player.instance.inventory.GetSortedItems ();
+        List<Item> playerItems = GameManager.mainPlayer.inventory.GetSortedItems ();
         foreach (Item item in playerItems) {
             CreateItemButton (item);
         }
@@ -80,8 +62,8 @@ public class InventoryUI : MonoBehaviour {
     }
 
     public static void ShowAnyItem () {
-        if (Player.instance.inventory.itemCount > 0) {
-            ShowItem (Player.instance.inventory.GetSortedItems () [0]);
+        if (GameManager.mainPlayer.inventory.itemCount > 0) {
+            ShowItem (GameManager.mainPlayer.inventory.GetSortedItems () [0]);
         } else {
             instance.layout.SetActive (false);
         }
@@ -121,7 +103,7 @@ public class InventoryUI : MonoBehaviour {
         if (selectedItem == null) return;
 
         int id = selectedItem.id;
-        int leftovers = Player.instance.DropItem (id);
+        int leftovers = GameManager.mainPlayer.DropItem (id);
         instance.itemCount.text = $"{selectedItem.count}x";
 
         if (leftovers <= 0) {
@@ -129,6 +111,24 @@ public class InventoryUI : MonoBehaviour {
             ShowAnyItem ();
         } else {
             currentItemText.text = $"{selectedItem.count}x {selectedItem.name}";
+        }
+    }
+
+    void Awake () {
+        instance = this;
+    }
+
+    void Start () {
+        Hide ();
+    }
+
+    void Update () {
+        if ((Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && shown) {
+            Hide ();
+        }
+
+        if (Input.GetKeyDown (KeyCode.Tab) && !GameManager.showingUI) {
+            Show ();
         }
     }
 }

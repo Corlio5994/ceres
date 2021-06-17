@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class PacketSender {
-    private static void SendTCPData (Packet packet) {
+    static void SendTCPData (Packet packet) {
         packet.WriteLength ();
         Client.TCP.SendData (packet);
     }

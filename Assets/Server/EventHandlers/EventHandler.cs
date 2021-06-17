@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -6,8 +7,8 @@ using UnityEngine;
 
 namespace GameServer {
     public static class EventHandler {
-        private delegate void PacketHandler (Client client, Packet packet);
-        private static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
+        delegate void PacketHandler (Client client, Packet packet);
+        static Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler> () { {
             (int) ClientPackets.VersionCheck, VersionCheck }, { 
             (int) ClientPackets.Login, Login }, {
             (int) ClientPackets.Logout, Logout }, {
@@ -28,7 +29,7 @@ namespace GameServer {
             packetHandlers[packetID] (client, packet);
         }
 
-        private static void VersionCheck (Client client, Packet packet) {
+        static void VersionCheck (Client client, Packet packet) {
             string version = packet.ReadString ();
 
             if (version == Constants.version)
@@ -37,7 +38,7 @@ namespace GameServer {
                 PacketSender.VersionDenied (client);
         }
 
-        private static void Login (Client client, Packet packet) {
+        static void Login (Client client, Packet packet) {
             string email = packet.ReadString ();
             string password = packet.ReadString ();
 
@@ -51,11 +52,11 @@ namespace GameServer {
             }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
-        private static void Logout (Client client, Packet packet) {
+        static void Logout (Client client, Packet packet) {
             client.Logout ();
         }
 
-        private static void PlayerMoved (Client client, Packet packet) {
+        static void PlayerMoved (Client client, Packet packet) {
             Vector3 destination = packet.ReadVector ();
             client.player.SetDestination (destination);
             PacketSender.OtherPlayerMoved (client, destination);
@@ -66,18 +67,18 @@ namespace GameServer {
             PacketSender.ChatMessage (client, message);
         }
 
-        private static void PlayerDataRequest (Client client, Packet packet) {
+        static void PlayerDataRequest (Client client, Packet packet) {
             PacketSender.PlayerData (client);
         }
 
-        private static void ItemPickupDataRequest (Client client, Packet packet) {
+        static void ItemPickupDataRequest (Client client, Packet packet) {
             PacketSender.ItemPickupData(client);
         }
 
-        private static void BankDataRequest (Client client, Packet packet) { 
+        static void BankDataRequest (Client client, Packet packet) { 
             PacketSender.BankDataRequest(client);
         }
-        private static void ItemDropped (Client client, Packet packet) {
+        static void ItemDropped (Client client, Packet packet) {
             int pickupID = packet.ReadInt ();
             Vector3 position = packet.ReadVector ();
             int itemID = packet.ReadInt ();
@@ -87,7 +88,7 @@ namespace GameServer {
             ItemPickup pickup = ItemDatabase.SpawnItemPickup (itemID, 1, position, pickupID);
             PacketSender.ItemDropped (client, pickupID, position, itemID);
         }
-        private static void ItemPickedUp (Client client, Packet packet) {
+        static void ItemPickedUp (Client client, Packet packet) {
             int pickupID = packet.ReadInt ();
             int count = packet.ReadInt ();
 
@@ -98,13 +99,13 @@ namespace GameServer {
             pickup.TakeItem (count);
             PacketSender.ItemPickedUp (client, pickup.id, count);
         }
-        private static void BankDeposit (Client client, Packet packet) {
+        static void BankDeposit (Client client, Packet packet) {
             int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
             client.BankDeposit (bankID, itemID, 1);
         }
-        private static void BankWithdraw (Client client, Packet packet) {
+        static void BankWithdraw (Client client, Packet packet) {
             int bankID = packet.ReadInt ();
             int itemID = packet.ReadInt ();
 
@@ -113,3 +114,4 @@ namespace GameServer {
 
     }
 }
+#endif

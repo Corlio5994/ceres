@@ -1,37 +1,9 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameServer {
     public static class PacketSender {
-        private static void SendTCPData (Client client, Packet packet) {
-            packet.WriteLength ();
-            client.tcp.SendData (packet);
-        }
-
-        private static void BroadcastTCPData (Packet packet, Client exceptClient = null) {
-            packet.WriteLength ();
-            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
-                Client client = Server.GetClient (clientID);
-                if (client == null) continue;
-
-                if (client != exceptClient) {
-                    client.tcp.SendData (packet);
-                }
-            }
-        }
-
-        private static void BroadcastLoggedIn (Packet packet, Client exceptClient = null) {
-            packet.WriteLength ();
-            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
-                Client client = Server.GetClient (clientID);
-                if (client == null || !client.loggedIn) continue;
-
-                if (client != exceptClient) {
-                    client.tcp.SendData (packet);
-                }
-            }
-        }
-
         #region Packets
         #region Admin
         public static void ConnectedTCP (Client client) {
@@ -62,7 +34,7 @@ namespace GameServer {
 
         public static void PlayerData (Client client) {
             using (Packet packet = new Packet (ServerPackets.PlayerData)) {
-                Person player = client.player;
+                Player player = client.player;
                 packet.Write (player.transform.position);
 
                 Client[] otherPlayers = Server.GetOtherClients (client);
@@ -180,5 +152,35 @@ namespace GameServer {
         }
         #endregion
         #endregion
+        
+        static void SendTCPData (Client client, Packet packet) {
+            packet.WriteLength ();
+            client.tcp.SendData (packet);
+        }
+
+        static void BroadcastTCPData (Packet packet, Client exceptClient = null) {
+            packet.WriteLength ();
+            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
+                Client client = Server.GetClient (clientID);
+                if (client == null) continue;
+
+                if (client != exceptClient) {
+                    client.tcp.SendData (packet);
+                }
+            }
+        }
+
+        static void BroadcastLoggedIn (Packet packet, Client exceptClient = null) {
+            packet.WriteLength ();
+            for (int clientID = 0; clientID < Server.maxPlayers; clientID++) {
+                Client client = Server.GetClient (clientID);
+                if (client == null || !client.loggedIn) continue;
+
+                if (client != exceptClient) {
+                    client.tcp.SendData (packet);
+                }
+            }
+        }
     }
 }
+#endif
