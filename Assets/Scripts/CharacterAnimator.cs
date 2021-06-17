@@ -9,7 +9,7 @@ public class CharacterAnimator : MonoBehaviour {
     [SerializeField] UnityEngine.AI.NavMeshAgent agent;
 
     void Update () {
-        float speedPercent = agent.velocity.magnitude / agent.speed;
+        float speedPercent = PlayerInput.input.magnitude;
         animator.SetFloat ("speedPercent", speedPercent, animationSmoothTime, Time.deltaTime);
     }
 }
