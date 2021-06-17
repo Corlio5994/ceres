@@ -3291,6 +3291,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &460151919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460151916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65e133cce0002b4e9ec3c570892a619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _singlePlayer: 1
 --- !u!1001 &469386438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4534,11 +4547,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124e8cb9c6e7a6b41a9c98fd706b078e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smoothTime: 0.5
-  _moveSpeed: 10
-  _minimumZoom: 5
-  _maximumZoom: 13
-  _zoomSpeed: 0.25
+  smoothTime: 4
+  moveSpeed: 10
+  minimumZoom: 5
+  maximumZoom: 13
+  zoomSpeed: 0.25
 --- !u!4 &684171951 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2230924991788993564, guid: 11975eeeffaec65409c8430718ba6aa7, type: 3}
@@ -13420,7 +13433,7 @@ GameObject:
   - component: {fileID: 2086930831}
   - component: {fileID: 2086930826}
   m_Layer: 7
-  m_Name: Chest
+  m_Name: Bank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -36,6 +36,7 @@ public class ContainerUI : MonoBehaviour {
 
         playerItemsDisplays = new Dictionary<int, TMP_Text> ();
         containerItemsDisplays = new Dictionary<int, TMP_Text> ();
+        instance.titleText.text = container.name;
 
         foreach (Transform child in instance.playerItemsParent) {
             Destroy (child.gameObject);
