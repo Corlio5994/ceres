@@ -29,8 +29,14 @@ public class Packet : IDisposable {
 
     public Packet () { }
 
-    public Packet (int id) {
-        Write (id);
+    public Packet (ClientPackets id) {
+        Console.Log (Enum.GetName (typeof (ClientPackets), id), "purple");
+        Write ((int) id);
+    }
+
+    public Packet (ServerPackets id) {
+        Console.Log (Enum.GetName (typeof (ServerPackets), id), "purple");
+        Write ((int) id);
     }
 
     public Packet (byte[] data) {
@@ -109,16 +115,29 @@ public class Packet : IDisposable {
     }
 
     public void Write (Vector3 value) {
-        Write(value.x);
-        Write(value.y);
-        Write(value.z);
+        Write (value.x);
+        Write (value.y);
+        Write (value.z);
     }
 
     public void Write (Quaternion value) {
-        Write(value.x);
-        Write(value.y);
-        Write(value.z);
-        Write(value.w);
+        Write (value.x);
+        Write (value.y);
+        Write (value.z);
+        Write (value.w);
+    }
+
+    public void Write (Item item) {
+        Write (item.id);
+        Write (item.count);
+    }
+
+    public void Write (Inventory inventory) {
+        Write(inventory.maxWeight);
+        Write (inventory.itemCount);
+        foreach (Item item in inventory.GetSortedItems ()) {
+            Write (item);
+        }
     }
     #endregion
 
@@ -233,6 +252,28 @@ public class Packet : IDisposable {
             return new Quaternion (ReadFloat (), ReadFloat (), ReadFloat (), ReadFloat ());
         } catch {
             throw new Exception ("Could not read value of type 'Quaternion'!");
+        }
+    }
+
+    public Item ReadItem (bool moveReadPosition = true) {
+        try {
+            return ItemDatabase.GetItem (ReadInt (), ReadInt ());
+        } catch {
+            throw new Exception ("Could not read value of type 'Item'!");
+        }
+    }
+
+    public Inventory ReadInventory (bool moveReadPosition = true) {
+        try {
+            float maxWeight = ReadFloat();
+            var inventory = new Inventory (maxWeight);
+            int itemCount = ReadInt ();
+            for (int i = 0; i < itemCount; i++) {
+                inventory.AddItem (ReadItem ());
+            }
+            return inventory;
+        } catch {
+            throw new Exception ("Could not read value of type 'Inventory'!");
         }
     }
     #endregion

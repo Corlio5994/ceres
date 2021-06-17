@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Container : Interactable {
-    [HideInInspector] public Inventory inventory { get; private set; } = new Inventory (9999);
+    [HideInInspector] public Inventory inventory { get; private set; }
     [SerializeField] Animator animator;
 
-    void Start () {
-        inventory.AddItem (ItemDatabase.GetItem (0, 10));
-        inventory.AddItem (ItemDatabase.GetItem (1, 10));
+    protected virtual void Start () {
+        inventory = new Inventory (999);
     }
 
     public override void Interact (Entity entity) {
@@ -31,6 +30,10 @@ public class Container : Interactable {
 
     public List<Item> GetItems () {
         return inventory.GetSortedItems ();
+    }
+
+    public void SetItems (List<Item> items) {
+        inventory.SetItems (items);
     }
 
     public Item Deposit (Item item) {

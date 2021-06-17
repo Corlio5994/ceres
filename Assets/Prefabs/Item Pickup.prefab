@@ -56,7 +56,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7343645889143702489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f954b320d06dfc347a0a3225ff21904e, type: 3}
+  m_Script: {fileID: 11500000, guid: fc9c905d3d56fdd42944e30f9b91f610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &-6773158574468881628
@@ -129,7 +129,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: a181796203e088e46a87a8a16974c98f, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1437f35d50e4fbc4eb547862e9d22406, type: 2}
+      objectReference: {fileID: 2100000, guid: 71a8aef4a8bbac44a8b2a260615a158f, type: 2}
     - target: {fileID: 919132149155446097, guid: a181796203e088e46a87a8a16974c98f, type: 3}
       propertyPath: m_Name
       value: Crate

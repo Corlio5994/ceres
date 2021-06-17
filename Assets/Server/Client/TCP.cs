@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System;
 using System.Net.Sockets;
 using UnityEngine;
@@ -8,12 +9,11 @@ namespace GameServer {
 
         public class TCP {
             public TcpClient socket;
-            private NetworkStream stream;
-            private Packet receivedData;
-            private byte[] receiveBuffer;
             public bool connected { get; private set; } = false;
-
-            private Client client;
+            NetworkStream stream;
+            Packet receivedData;
+            byte[] receiveBuffer;
+            Client client;
 
             public TCP (Client client) {
                 this.client = client;
@@ -23,18 +23,25 @@ namespace GameServer {
                 connected = true;
 
                 this.socket = socket;
-                socket.ReceiveBufferSize = Client.dataBufferSize;
-                socket.SendBufferSize = Client.dataBufferSize;
+                socket.ReceiveBufferSize = Constants.dataBufferSize;
+                socket.SendBufferSize = Constants.dataBufferSize;
 
                 stream = socket.GetStream ();
 
                 receivedData = new Packet ();
-                receiveBuffer = new byte[dataBufferSize];
+                receiveBuffer = new byte[Constants.dataBufferSize];
 
-                stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+                stream.BeginRead (receiveBuffer, 0, Constants.dataBufferSize, ReceiveCallback, null);
 
                 Console.Log ($"[{client.id}] Sucessfully connected TCP");
                 PacketSender.ConnectedTCP (client);
+            }
+
+            public void Disconnect () {
+                socket.Close ();
+                stream = null;
+                receivedData = null;
+                receiveBuffer = null;
             }
 
             public void SendData (Packet packet) {
@@ -47,11 +54,11 @@ namespace GameServer {
                 }
             }
 
-            private void ReceiveCallback (IAsyncResult result) {
+            void ReceiveCallback (IAsyncResult result) {
                 try {
                     int byteLength = stream.EndRead (result);
                     if (byteLength <= 0) {
-                        Server.Disconnect (client);
+                        Server.DisconnectClient (client);
                         return;
                     }
 
@@ -59,14 +66,14 @@ namespace GameServer {
                     Array.Copy (receiveBuffer, data, byteLength);
 
                     receivedData.Reset (HandleData (data));
-                    stream.BeginRead (receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+                    stream.BeginRead (receiveBuffer, 0, Constants.dataBufferSize, ReceiveCallback, null);
                 } catch (Exception exception) {
                     Console.LogError ($"[{client.id}] Error receiving TCP: {exception}");
-                    Server.Disconnect (client);
+                    Server.DisconnectClient (client);
                 }
             }
 
-            private bool HandleData (byte[] data) {
+            bool HandleData (byte[] data) {
                 int packetLength = 0;
 
                 receivedData.SetBytes (data);
@@ -102,13 +109,7 @@ namespace GameServer {
                 return false;
 
             }
-
-            public void Disconnect () {
-                socket.Close ();
-                stream = null;
-                receivedData = null;
-                receiveBuffer = null;
-            }
         }
     }
 }
+#endif

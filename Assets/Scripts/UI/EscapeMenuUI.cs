@@ -4,23 +4,9 @@ using UnityEngine;
 
 public class EscapeMenuUI : MonoBehaviour {
     public static bool shown { get; private set; }
-    private static RectTransform escapeMenu;
-    [SerializeField] private RectTransform _escapeMenu;
+    static RectTransform escapeMenu;
 
-    void Awake () {
-        escapeMenu = _escapeMenu;
-    }
-
-    void Start () {
-        Hide ();
-    }
-
-    void Update () {
-        if (Input.GetKeyDown (KeyCode.Escape) && shown)
-            Hide ();
-        if (Input.GetKeyDown (KeyCode.Escape) && !GameManager.showingUI)
-            Show ();
-    }
+    [SerializeField] RectTransform _escapeMenu;
 
     private void Hide () {
         escapeMenu.gameObject.SetActive (false);
@@ -45,5 +31,20 @@ public class EscapeMenuUI : MonoBehaviour {
             Client.Logout ();
         else
             GameManager.Quit ();
+    }
+
+    void Awake () {
+        escapeMenu = _escapeMenu;
+    }
+
+    void Start () {
+        Hide ();
+    }
+
+    void Update () {
+        if (Input.GetKeyDown (KeyCode.Escape) && shown)
+            Hide ();
+        if (Input.GetKeyDown (KeyCode.Escape) && !GameManager.showingUI)
+            Show ();
     }
 }

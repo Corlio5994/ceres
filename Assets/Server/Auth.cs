@@ -1,3 +1,4 @@
+#if UNITY_SERVER || UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -5,7 +6,7 @@ using Firebase.Auth;
 
 namespace GameServer {
     public static class Authoriser {
-        private static FirebaseAuth auth;
+        static FirebaseAuth auth;
 
         public static void Start () {
             auth = FirebaseAuth.GetAuth (FirebaseSetup.app);
@@ -22,3 +23,4 @@ namespace GameServer {
         }
     }
 }
+#endif

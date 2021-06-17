@@ -4,10 +4,10 @@ using UnityEngine;
 
 [System.Serializable]
 public class Inventory {
-    [SerializeField] private List<Item> items = new List<Item> ();
-    [SerializeField] private float maxWeight = 30;
-    [SerializeField] private float weight = 0;
+    public readonly float maxWeight;
     public int itemCount { get { return items.Count; } }
+    [SerializeField] List<Item> items = new List<Item> ();
+    [SerializeField] float weight = 0;
 
     private float availableSpace { get { return maxWeight - weight; } }
 
@@ -35,6 +35,10 @@ public class Inventory {
             AddItem (item);
             return leftovers;
         }
+    }
+
+    public void SetItems (List<Item> items) {
+        this.items = items;
     }
 
     public List<Item> GetSortedItems () {

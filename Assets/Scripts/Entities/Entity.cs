@@ -3,26 +3,10 @@ using UnityEngine.AI;
 
 [RequireComponent (typeof (NavMeshAgent))]
 public class Entity : MonoBehaviour {
-    private NavMeshAgent agent;
-    private Interactable interactable;
+    public Inventory inventory = new Inventory ();
 
-    [SerializeField] public Inventory inventory = new Inventory ();
-
-    protected virtual void Start () {
-        agent = GetComponent<NavMeshAgent> ();
-    }
-
-    void FixedUpdate () {
-        if (interactable != null && interactable.InRange (transform.position)) {
-            interactable.Interact (this);
-            interactable = null;
-            Stop ();
-        }
-    }
-
-    protected virtual void Update () {
-        
-    }
+    NavMeshAgent agent;
+    Interactable interactable;
 
     public Item AddItem (Item item) {
         return inventory.AddItem (item);
@@ -34,7 +18,8 @@ public class Entity : MonoBehaviour {
 
     public int DropItem (int id, int count = 1) {
         int leftoverCount = RemoveItem (id, count);
-        ItemDatabase.SpawnItemPickup (id, count, transform.position);
+        ItemPickup pickup = ItemDatabase.SpawnItemPickup (id, count, transform.position);
+        PacketSender.ItemDropped(pickup);
         return leftoverCount;
     }
 
@@ -42,12 +27,24 @@ public class Entity : MonoBehaviour {
         agent.SetDestination (destination);
     }
 
-    public void Stop () {
+    public virtual void Stop () {
         SetDestination (transform.position);
     }
 
-    protected void Interact (Interactable interactable) {
+    public void Interact (Interactable interactable) {
         this.interactable = interactable;
         SetDestination (interactable.transform.position);
+    }
+
+    protected virtual void Start () {
+        agent = GetComponent<NavMeshAgent> ();
+    }
+
+    void FixedUpdate () {
+        if (interactable != null && interactable.InRange (transform.position)) {
+            interactable.Interact (this);
+            interactable = null;
+            Stop ();
+        }
     }
 }

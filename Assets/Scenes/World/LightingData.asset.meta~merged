@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+<<<<<<< HEAD
+guid: 927830597d96f864c8d0d43c13ab537c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+=======
+<<<<<<< HEAD:Assets/Meshes.meta
+guid: 3e09e999bc0a1e741839a674663cf8f6
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+=======
+guid: 927830597d96f864c8d0d43c13ab537c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>> art-assets:Assets/Scenes/World/LightingData.asset.meta
+>>>>>>> art-assets
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
